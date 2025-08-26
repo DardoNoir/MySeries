@@ -15,23 +15,26 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Volo.Abp.Emailing" Version="9.3.1" />
-    <PackageReference Include="Volo.Abp.Caching" Version="9.3.1" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="9.3.1" />
-    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.OpenIddict" Version="9.3.1" />
-    <PackageReference Include="Volo.Abp.BackgroundJobs.Domain" Version="9.3.1" />
-    <PackageReference Include="Volo.Abp.AuditLogging.Domain" Version="9.3.1" />
-    <PackageReference Include="Volo.Abp.FeatureManagement.Domain" Version="9.3.1" />
-    <PackageReference Include="Volo.Abp.SettingManagement.Domain" Version="9.3.1" />
-    <PackageReference Include="Volo.Abp.BlobStoring.Database.Domain" Version="9.3.1" />
+    <PackageReference Include="Volo.Abp.Emailing" Version="9.3.2" />
+    <PackageReference Include="Volo.Abp.Caching" Version="9.3.2" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.Identity" Version="9.3.2" />
+    <PackageReference Include="Volo.Abp.PermissionManagement.Domain.OpenIddict" Version="9.3.2" />
+    <PackageReference Include="Volo.Abp.BackgroundJobs.Domain" Version="9.3.2" />
+    <PackageReference Include="Volo.Abp.AuditLogging.Domain" Version="9.3.2" />
+    <PackageReference Include="Volo.Abp.FeatureManagement.Domain" Version="9.3.2" />
+    <PackageReference Include="Volo.Abp.SettingManagement.Domain" Version="9.3.2" />
+    <PackageReference Include="Volo.Abp.BlobStoring.Database.Domain" Version="9.3.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Volo.Abp.OpenIddict.Domain" Version="9.3.1" />
-    <PackageReference Include="Volo.Abp.Identity.Domain" Version="9.3.1" />
-    <PackageReference Include="Volo.Abp.TenantManagement.Domain" Version="9.3.1" />
+    <PackageReference Include="Volo.Abp.OpenIddict.Domain" Version="9.3.2" />
+    <PackageReference Include="Volo.Abp.Identity.Domain" Version="9.3.2" />
+    <PackageReference Include="Volo.Abp.TenantManagement.Domain" Version="9.3.2" />
   </ItemGroup>
 
 </Project>
