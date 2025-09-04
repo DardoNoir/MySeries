@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MySeries;
 
@@ -11,6 +12,9 @@ public class Serie
     public required DateTime ReleaseDate { get; set; }
     public string? Country { get; set; }
     //ver para temporadas
+
+    public ICollection<Temporada> Temporadas { get; set; } = new List<Temporada>();
     // ver para episodios
+
 
 }
