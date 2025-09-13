@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Volo.Abp.Domain.Entities;
 
-namespace MySeries;
+namespace MySeries.Series;
 
-public class Temporada
+public class Temporada : AggregateRoot<Guid>
 {
-    public required int Id { get; set; }
+  //  public required int Id { get; set; }
     public string? Description { get; set; }
 
     // Relación con la entidad Serie y Episodio

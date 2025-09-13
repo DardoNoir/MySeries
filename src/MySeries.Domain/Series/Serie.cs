@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Volo.Abp.Domain.Entities;
 
-namespace MySeries;
+namespace MySeries.Series;
 
-public class Serie
+public class Serie : AggregateRoot<Guid>
 {
-    public Guid Id { get; set; }
+   //  public Guid Id { get; set; }
     public required string Title { get; set; }
     public required string Genre { get; set; }
     public string? Description { get; set; }
