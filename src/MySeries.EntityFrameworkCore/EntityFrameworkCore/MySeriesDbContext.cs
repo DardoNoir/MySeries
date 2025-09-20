@@ -71,36 +71,6 @@ public class MySeriesDbContext :
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
-builder.Entity<Serie>(b =>
-    {
-        b.ToTable("Series");
-
-        b.HasKey(s => s.Id);
-
-        b.Property(s => s.Title)
-         .IsRequired()
-         .HasMaxLength(250);
-
-        b.Property(s => s.Genre)
-         .IsRequired()
-         .HasMaxLength(100);
-
-        b.Property(s => s.Description)
-         .HasMaxLength(2000);
-
-        b.Property(s => s.Country)
-         .HasMaxLength(100);
-
-        b.Property(s => s.ImdbId)
-         .HasMaxLength(20);
-
-        b.Property(s => s.ImdbRating)
-         .HasMaxLength(10);
-
-        b.Property(s => s.TotalSeasons)
-         .HasMaxLength(10);
-    });
 
         /* Include modules to your migration db context */
 
