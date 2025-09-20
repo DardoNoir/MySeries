@@ -11,10 +11,12 @@ public class Serie : AggregateRoot<Guid>
     public string? Description { get; set; }
     public required DateTime ReleaseDate { get; set; }
     public string? Country { get; set; }
-     public string? ImdbId { get; set; }  // relación con OMDb
+     public string? ImdbId { get; set; }  // relación con OMDb 
+    public string? ImdbRating { get; set; }
+    public string? TotalSeasons { get; set; }
 
     //temporadas
     public ICollection<Temporada> Temporadas { get; set; } = new List<Temporada>();
-
+    
 
 }
