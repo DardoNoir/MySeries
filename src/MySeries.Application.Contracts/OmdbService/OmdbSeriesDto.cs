@@ -11,6 +11,6 @@ namespace MySeries.Application.Contracts.OmdbService
         public string? Country { get; set; }
         public string? Poster { get; set; }
         public string? ImdbRating { get; set; }
-        public int? TotalSeasons { get; set; }
+        public string? TotalSeasons { get; set; }
     }
 }

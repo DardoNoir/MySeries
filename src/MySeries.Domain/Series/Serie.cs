@@ -12,8 +12,8 @@ public class Serie : AggregateRoot<Guid>
     public required DateTime ReleaseDate { get; set; }
     public string? Country { get; set; }
      public string? ImdbId { get; set; }  // relación con OMDb
-    //ver para temporadas
 
+    //temporadas
     public ICollection<Temporada> Temporadas { get; set; } = new List<Temporada>();
 
 
