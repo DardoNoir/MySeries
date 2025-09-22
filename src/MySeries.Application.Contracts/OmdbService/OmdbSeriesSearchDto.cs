@@ -16,5 +16,6 @@ namespace MySeries.Application.Contracts.OmdbService
         public string Year { get; set; } = default!;
         public string Type { get; set; } = default!;
         public string? Poster { get; set; }
+        public string? Genre { get; set; } // Nuevo campo para el género
     }
 }

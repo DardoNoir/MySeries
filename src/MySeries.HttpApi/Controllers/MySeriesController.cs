@@ -1,14 +1,30 @@
-﻿using MySeries.Localization;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using MySeries.Application.Contracts;
+using MySeries.Application.Contracts.OmdbService;
 using Volo.Abp.AspNetCore.Mvc;
 
 namespace MySeries.Controllers;
 
-/* Inherit your controllers from this class.
- */
-public abstract class MySeriesController : AbpControllerBase
+[Route("api/series")]
+public class SeriesController : AbpController
 {
-    protected MySeriesController()
+    private readonly ISeriesAppService _seriesAppService;
+
+    public SeriesController(ISeriesAppService seriesAppService)
     {
-        LocalizationResource = typeof(MySeriesResource);
+        _seriesAppService = seriesAppService;
+    }
+
+    [HttpGet("{imdbId}")]
+    public async Task<OmdbSeriesDto> GetFromOmdbAsync(string imdbId)
+    {
+        return await _seriesAppService.GetFromOmdbAsync(imdbId);
+    }
+
+    [HttpGet("search")]
+    public async Task<OmdbSeriesSearchDto> SearchFromOmdbAsync([FromQuery] string title, [FromQuery] string? genre = null)
+    {
+        return await _seriesAppService.SearchFromOmdbAsync(title, genre);
     }
 }

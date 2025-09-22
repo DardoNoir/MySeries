@@ -7,5 +7,8 @@ namespace MySeries.Application.Contracts
     public interface ISeriesAppService : IApplicationService
     {
         Task<OmdbSeriesDto> GetFromOmdbAsync(string imdbId);
+       Task<OmdbSeriesSearchDto> SearchFromOmdbAsync
+        (string title, string? genre = null);
+
     }
 }
