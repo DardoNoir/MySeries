@@ -2,6 +2,8 @@ using MySeries.Application.Contracts;
 using Volo.Abp.Application.Services;
 using System.Threading.Tasks;
 using MySeries.Application.Contracts.OmdbService;
+using System;
+using System.Linq;
 
 
 public class SeriesAppService : ApplicationService, ISeriesAppService
@@ -29,4 +31,16 @@ public class SeriesAppService : ApplicationService, ISeriesAppService
             TotalSeasons = series.TotalSeasons
         };
     }
+   public async Task<OmdbSeriesSearchDto> SearchFromOmdbAsync(string title, string? genre = null)
+    {
+        var searchResult = await _omdbSeriesService.SearchByTitleAsync(title);
+        if (!string.IsNullOrWhiteSpace(genre))
+        {
+            searchResult.Search = searchResult.Search
+                .FindAll(s => s.Title.Contains(genre, StringComparison.OrdinalIgnoreCase));
+        }
+        return searchResult;
+    }
 }
+
+
