@@ -5,8 +5,8 @@ namespace MySeries.Application.Contracts.OmdbService
     public class OmdbSeriesSearchDto
     {
         public List<OmdbSeriesSearchItemDto> Search { get; set; } = new();
-        public int TotalResults { get; set; }
-        public bool Response { get; set; }
+        public string? TotalResults { get; set; }
+        public string? Response { get; set; }
     }
 
     public class OmdbSeriesSearchItemDto
@@ -16,6 +16,6 @@ namespace MySeries.Application.Contracts.OmdbService
         public string Year { get; set; } = default!;
         public string Type { get; set; } = default!;
         public string? Poster { get; set; }
-        public string? Genre { get; set; } // Nuevo campo para el género
+        public string? Genre { get; set; } 
     }
 }
