@@ -1,0 +1,23 @@
+<div class="search-box">
+  <input [(ngModel)]="searchTerm" placeholder="Buscar series..." />
+  <button (click)="search()">Buscar</button>
+</div>
+
+<div *ngIf="loading">Buscando...</div>
+
+<div *ngIf="results.length > 0">
+  <h3>Resultados:</h3>
+  <ul>
+    <li *ngFor="let serie of results">
+      <img *ngIf="serie.poster" [src]="serie.poster" alt="{{serie.title}}" width="50" />
+      <strong>{{serie.title}}</strong> ({{serie.year}}) - {{serie.genre || 'Sin género'}}
+    </li>
+  </ul>
+</div>
+
+<h1>Buscador de Series (Omdb)</h1>
+<app-series-search></app-series-search>
+
+
+
+

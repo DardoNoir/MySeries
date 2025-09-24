@@ -27,11 +27,11 @@ public class Program
                 .UseSerilog((context, services, loggerConfiguration) =>
                 {
                     loggerConfiguration
-                    #if DEBUG
+#if DEBUG
                         .MinimumLevel.Debug()
-                    #else
+#else
                         .MinimumLevel.Information()
-                    #endif
+#endif
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                         .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
                         .Enrich.FromLogContext()
@@ -39,9 +39,28 @@ public class Program
                         .WriteTo.Async(c => c.Console())
                         .WriteTo.Async(c => c.AbpStudio(services));
                 });
+
             await builder.AddApplicationAsync<MySeriesHttpApiHostModule>();
             var app = builder.Build();
+
             await app.InitializeApplicationAsync();
+
+            // 👉 Servir Angular desde wwwroot
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            // 👉 Redirigir rutas desconocidas al index.html de Angular
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404 && !System.IO.Path.HasExtension(context.Request.Path.Value))
+                {
+                    context.Response.StatusCode = 200;
+                    context.Request.Path = "/index.html";
+                    await next();
+                }
+            });
+
             await app.RunAsync();
             return 0;
         }
