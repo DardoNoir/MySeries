@@ -27,7 +27,7 @@ export class SeriesSearchComponent {
     this.error = undefined;
 
     // choose the right method based on your Swagger (GET or POST)
-    this.seriesService.searchFromOmdb_get(this.title, this.genre)
+    this.seriesService.searchSeries(this.title, this.genre)
       .subscribe({
         next: res => {
           this.results = res?.search ?? [];

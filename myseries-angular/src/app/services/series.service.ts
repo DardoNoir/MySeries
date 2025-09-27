@@ -20,9 +20,9 @@ export class SeriesService {
     return this.http.get<OmdbSeriesDto>(`${this.baseUrl}/api/app/series/get-from-omdb`, { params });
   }
 
-  searchFromOmdb_get(title: string, genre?: string): Observable<OmdbSeriesSearchDto> {
-    let params = new HttpParams().set('title', title);
-    if (genre) { params = params.set('genre', genre); }
-    return this.http.get<OmdbSeriesSearchDto>(`${this.baseUrl}/api/app/series/search-from-omdb`, { params });
-  }
+  searchSeries(title: string, genre?: string): Observable<OmdbSeriesSearchDto> {
+  let params = new HttpParams().set('title', title);
+  if (genre) { params = params.set('genre', genre); }
+  return this.http.get<OmdbSeriesSearchDto>(`${this.baseUrl}/api/series/search`, { params });
+}
 }
