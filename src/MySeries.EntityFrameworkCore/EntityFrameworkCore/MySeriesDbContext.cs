@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
-using MySeries.Books;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.BlobStoring.Database.EntityFrameworkCore;
 using Volo.Abp.Data;
@@ -15,6 +14,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
+using MySeries.Series;
 
 namespace MySeries.EntityFrameworkCore;
 
@@ -27,8 +27,11 @@ public class MySeriesDbContext :
     IIdentityDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    // Agregar las entidades aqui
 
-    public DbSet<Book> Books { get; set; }
+    public DbSet<Serie> series { get; set; }
+    public DbSet<Episodio> episodios { get; set; }
+    public DbSet<Temporada> temporadas { get; set; }
 
     #region Entities from the modules
 
@@ -80,15 +83,55 @@ public class MySeriesDbContext :
         builder.ConfigureOpenIddict();
         builder.ConfigureTenantManagement();
         builder.ConfigureBlobStoring();
-        
-        builder.Entity<Book>(b =>
+
+
+        // --- Configuración de Serie ---
+        builder.Entity<Serie>(b =>
         {
-            b.ToTable(MySeriesConsts.DbTablePrefix + "Books",
-                MySeriesConsts.DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
-            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+            b.ToTable("AppSeries"); // nombre de tabla
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.Title).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Genre).IsRequired().HasMaxLength(100);
+            b.Property(x => x.Description).HasMaxLength(2000);
+            b.Property(x => x.ReleaseDate).IsRequired();
+            b.Property(x => x.Country).HasMaxLength(100);
+            b.Property(x => x.ImdbId).HasMaxLength(20);
+            b.Property(x => x.ImdbRating).HasMaxLength(10);
+            b.Property(x => x.TotalSeasons).HasMaxLength(10);
+
+            // Relación Serie -> Temporadas
+            b.HasMany(s => s.Temporadas)
+             .WithOne(t => t.Serie)
+             .HasForeignKey(t => t.SerieId)
+             .OnDelete(DeleteBehavior.Restrict); // 🔑 evitamos cascade aquí
         });
-        
+
+        // --- Configuración de Temporada ---
+        builder.Entity<Temporada>(b =>
+        {
+            b.ToTable("AppTemporadas");
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.Description).HasMaxLength(2000);
+
+            // Relación Temporada -> Episodios
+            b.HasMany(t => t.Episodios)
+             .WithOne(e => e.Temporada)
+             .HasForeignKey(e => e.TemporadaId)
+             .OnDelete(DeleteBehavior.Cascade); // 👌 aquí sí cascade
+        });
+
+        // --- Configuración de Episodio ---
+        builder.Entity<Episodio>(b =>
+        {
+            b.ToTable("AppEpisodios");
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.Title).IsRequired().HasMaxLength(256);
+            b.Property(x => x.Description).HasMaxLength(2000);
+        });
+
         /* Configure your own tables/entities inside here */
 
         //builder.Entity<YourEntity>(b =>
