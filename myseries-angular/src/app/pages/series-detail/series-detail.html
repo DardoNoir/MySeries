@@ -1,0 +1,9 @@
+<div *ngIf="loading">Loading details...</div>
+<div *ngIf="model">
+  <h2>{{ model.title }} ({{ model.year }})</h2>
+  <img *ngIf="model.poster" [src]="model.poster" alt="poster" />
+  <p><strong>Genre:</strong> {{ model.genre }}</p>
+  <p><strong>Plot:</strong> {{ model.plot }}</p>
+  <p><strong>IMDB Rating:</strong> {{ model.imdbRating }}</p>
+  <p><strong>Total Seasons:</strong> {{ model.totalSeasons }}</p>
+</div>
