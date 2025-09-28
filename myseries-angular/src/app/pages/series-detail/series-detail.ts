@@ -12,20 +12,29 @@ import { OmdbSeriesDto } from '../../models/omdb-series.model';
   styleUrls: ['./series-detail.scss']
 })
 export class SeriesDetailComponent implements OnInit {
-  imdbId?: string;
-  model?: OmdbSeriesDto;
-  loading = false;
-  constructor(private route: ActivatedRoute, private service: SeriesService) {}
+  series: OmdbSeriesDto | null = null;
+  loading = true; // ✅ Add this
+
+  constructor(
+    private route: ActivatedRoute,
+    private seriesService: SeriesService
+  ) {}
 
   ngOnInit() {
-    this.imdbId = this.route.snapshot.paramMap.get('id') ?? undefined;
-    if (!this.imdbId) return;
-    this.loading = true;
-    // choose get/post variant matching Swagger
-    this.service.getFromOmdb_get(this.imdbId).subscribe({
-      next: r => { this.model = r; this.loading = false; },
-      error: e => { console.error(e); this.loading = false; }
-    });
+    const imdbId = this.route.snapshot.paramMap.get('id');
+    if (imdbId) {
+      this.seriesService.getFromOmdb_get(imdbId).subscribe({
+        next: (res) => {
+          this.series = res;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+        }
+      });
+    } else {
+      this.loading = false;
+    }
   }
 }
-

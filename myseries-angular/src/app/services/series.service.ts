@@ -15,10 +15,11 @@ export class SeriesService {
 
   // === Use the variant that matches Swagger (GET vs POST) ===
   // 1) GET variant (common when ABP exposes simple parameters as query-string)
-  getFromOmdb_get(imdbId: string): Observable<OmdbSeriesDto> {
-    const params = new HttpParams().set('imdbId', imdbId);
-    return this.http.get<OmdbSeriesDto>(`${this.baseUrl}/api/app/series/get-from-omdb`, { params });
-  }
+ getFromOmdb_get(imdbId: string): Observable<OmdbSeriesDto> {
+  return this.http.get<OmdbSeriesDto>(
+    `${this.baseUrl}/api/app/series/from-omdb/${imdbId}`
+  );
+}
 
   searchSeries(title: string, genre?: string): Observable<OmdbSeriesSearchDto> {
   let params = new HttpParams().set('title', title);
