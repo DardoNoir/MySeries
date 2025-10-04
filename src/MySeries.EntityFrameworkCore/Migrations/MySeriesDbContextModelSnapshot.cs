@@ -24,20 +24,29 @@ namespace MySeries.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("MySeries.Episodio", b =>
+            modelBuilder.Entity("MySeries.Series.Episodio", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("TemporadaId")
-                        .HasColumnType("int");
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<Guid>("TemporadaId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -51,49 +60,102 @@ namespace MySeries.Migrations
                     b.ToTable("AppEpisodios", (string)null);
                 });
 
-            modelBuilder.Entity("MySeries.Serie", b =>
+            modelBuilder.Entity("MySeries.Series.Serie", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Actors")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
 
                     b.Property<string>("Country")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
+                    b.Property<string>("Director")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
 
                     b.Property<string>("Genre")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("ReleaseDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("ImdbId")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("ImdbRating")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Plot")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Poster")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Runtime")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("TotalSeasons")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Writer")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("Year")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("AppSeries", (string)null);
                 });
 
-            modelBuilder.Entity("MySeries.Temporada", b =>
+            modelBuilder.Entity("MySeries.Series.Temporada", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
 
                     b.Property<string>("Description")
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
 
                     b.Property<Guid>("SerieId")
                         .HasColumnType("uniqueidentifier");
@@ -1962,9 +2024,9 @@ namespace MySeries.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
-            modelBuilder.Entity("MySeries.Episodio", b =>
+            modelBuilder.Entity("MySeries.Series.Episodio", b =>
                 {
-                    b.HasOne("MySeries.Temporada", "Temporada")
+                    b.HasOne("MySeries.Series.Temporada", "Temporada")
                         .WithMany("Episodios")
                         .HasForeignKey("TemporadaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1973,9 +2035,9 @@ namespace MySeries.Migrations
                     b.Navigation("Temporada");
                 });
 
-            modelBuilder.Entity("MySeries.Temporada", b =>
+            modelBuilder.Entity("MySeries.Series.Temporada", b =>
                 {
-                    b.HasOne("MySeries.Serie", "Serie")
+                    b.HasOne("MySeries.Series.Serie", "Serie")
                         .WithMany("Temporadas")
                         .HasForeignKey("SerieId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2135,12 +2197,12 @@ namespace MySeries.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MySeries.Serie", b =>
+            modelBuilder.Entity("MySeries.Series.Serie", b =>
                 {
                     b.Navigation("Temporadas");
                 });
 
-            modelBuilder.Entity("MySeries.Temporada", b =>
+            modelBuilder.Entity("MySeries.Series.Temporada", b =>
                 {
                     b.Navigation("Episodios");
                 });

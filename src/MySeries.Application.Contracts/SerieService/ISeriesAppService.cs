@@ -10,5 +10,8 @@ namespace MySeries.Application.Contracts
        Task<OmdbSeriesSearchDto> SearchFromOmdbAsync
         (string title, string? genre = null);
 
+        Task<OmdbSeriesDto> GetFromDatabaseByTitleAsync(string title);
+        Task<OmdbSeriesDto> PersistFromOmdbByTitleAsync(OmdbSeriesDto omdbSeriesDto);
+
     }
 }

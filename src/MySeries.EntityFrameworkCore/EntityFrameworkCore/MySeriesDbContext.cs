@@ -88,24 +88,30 @@ public class MySeriesDbContext :
         // --- Configuración de Serie ---
         builder.Entity<Serie>(b =>
         {
-            b.ToTable("AppSeries"); // nombre de tabla
+            b.ToTable("AppSeries");
             b.HasKey(x => x.Id);
 
             b.Property(x => x.Title).IsRequired().HasMaxLength(256);
             b.Property(x => x.Genre).IsRequired().HasMaxLength(100);
-            b.Property(x => x.Description).HasMaxLength(2000);
-            b.Property(x => x.ReleaseDate).IsRequired();
+            b.Property(x => x.Plot).HasMaxLength(2000);
+            b.Property(x => x.Year).IsRequired();
             b.Property(x => x.Country).HasMaxLength(100);
             b.Property(x => x.ImdbId).HasMaxLength(20);
             b.Property(x => x.ImdbRating).HasMaxLength(10);
             b.Property(x => x.TotalSeasons).HasMaxLength(10);
+            b.Property(x => x.Poster).HasMaxLength(500);
+            b.Property(x => x.Runtime).HasMaxLength(50);
+            b.Property(x => x.Actors).HasMaxLength(1000);
+            b.Property(x => x.Director).HasMaxLength(256);
+            b.Property(x => x.Writer).HasMaxLength(1000);
 
             // Relación Serie -> Temporadas
             b.HasMany(s => s.Temporadas)
              .WithOne(t => t.Serie)
              .HasForeignKey(t => t.SerieId)
-             .OnDelete(DeleteBehavior.Restrict); // 🔑 evitamos cascade aquí
+             .OnDelete(DeleteBehavior.Restrict);
         });
+
 
         // --- Configuración de Temporada ---
         builder.Entity<Temporada>(b =>

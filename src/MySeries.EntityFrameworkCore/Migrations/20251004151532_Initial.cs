@@ -446,24 +446,29 @@ namespace MySeries.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AppBooks",
+                name: "AppSeries",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    PublishDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Price = table.Column<float>(type: "real", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Genre = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Plot = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    Year = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    ImdbId = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    ImdbRating = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    TotalSeasons = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: true),
+                    Poster = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Runtime = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Actors = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    Director = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Writer = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false),
-                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppBooks", x => x.Id);
+                    table.PrimaryKey("PK_AppSeries", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -785,6 +790,27 @@ namespace MySeries.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppTemporadas",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    SerieId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppTemporadas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppTemporadas_AppSeries_SerieId",
+                        column: x => x.SerieId,
+                        principalTable: "AppSeries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictAuthorizations",
                 columns: table => new
                 {
@@ -828,6 +854,28 @@ namespace MySeries.Migrations
                         name: "FK_AbpEntityPropertyChanges_AbpEntityChanges_EntityChangeId",
                         column: x => x.EntityChangeId,
                         principalTable: "AbpEntityChanges",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppEpisodios",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    TemporadaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppEpisodios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppEpisodios_AppTemporadas_TemporadaId",
+                        column: x => x.TemporadaId,
+                        principalTable: "AppTemporadas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1100,6 +1148,16 @@ namespace MySeries.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppEpisodios_TemporadaId",
+                table: "AppEpisodios",
+                column: "TemporadaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppTemporadas_SerieId",
+                table: "AppTemporadas",
+                column: "SerieId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 table: "OpenIddictApplications",
                 column: "ClientId");
@@ -1212,7 +1270,7 @@ namespace MySeries.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AppBooks");
+                name: "AppEpisodios");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
@@ -1239,10 +1297,16 @@ namespace MySeries.Migrations
                 name: "AbpUsers");
 
             migrationBuilder.DropTable(
+                name: "AppTemporadas");
+
+            migrationBuilder.DropTable(
                 name: "OpenIddictAuthorizations");
 
             migrationBuilder.DropTable(
                 name: "AbpAuditLogs");
+
+            migrationBuilder.DropTable(
+                name: "AppSeries");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictApplications");
