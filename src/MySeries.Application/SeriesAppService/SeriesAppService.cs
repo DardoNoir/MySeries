@@ -28,8 +28,8 @@ namespace MySeries.Application.Series
         }
 
  
-        // Buscar series por título y opcionalmente filtrar por género.
-        // Devuelve OmdbSeriesSearchDto enriquecido con el género.
+        // Buscar series por tï¿½tulo y opcionalmente filtrar por gï¿½nero.
+        // Devuelve OmdbSeriesSearchDto enriquecido con el gï¿½nero.
  
         public async Task<OmdbSeriesSearchDto> SearchFromOmdbAsync(string title, string? genre = null)
         {
