@@ -28,8 +28,8 @@ namespace MySeries.Application.Series
         }
 
  
-        // Buscar series por t�tulo y opcionalmente filtrar por g�nero.
-        // Devuelve OmdbSeriesSearchDto enriquecido con el g�nero.
+        // Buscar series por titulo y opcionalmente filtrar por genero.
+        // Devuelve OmdbSeriesSearchDto enriquecido con el genero.
  
         public async Task<OmdbSeriesSearchDto> SearchFromOmdbAsync(string title, string? genre = null)
         {
@@ -44,18 +44,27 @@ namespace MySeries.Application.Series
             {
                 var details = await _omdbSeriesService.GetByImdbIdAsync(item.ImdbId);
 
-                item.Genre = details.Genre; // enriquecemos el SearchItem
-
+                item.Genre = details.Genre; // enriquecemos el 
+                item.Writer = details.Writer;
+                item.Director = details.Director;
+                item.Actors = details.Actors;
+                item.Plot = details.Plot;
+                item.Runtime = details.Runtime;
+                item.ImdbRating = details.ImdbRating;
+                item.TotalSeasons = details.TotalSeasons;
+                item.Country = details.Country;
+                
                 if (string.IsNullOrWhiteSpace(genre) ||
                     (item.Genre != null && item.Genre.Contains(genre, StringComparison.OrdinalIgnoreCase)))
                 {
                     filtered.Add(item);
                 }
+                
             }
-
+            
             searchResult.Search = filtered;
             searchResult.TotalResults = filtered.Count.ToString();
-
+            
             return searchResult;
         }
 
@@ -98,7 +107,12 @@ namespace MySeries.Application.Series
                     Country = omdbDto.Country,
                     ImdbId = omdbDto.ImdbId,
                     ImdbRating = omdbDto.ImdbRating,
-                    TotalSeasons = omdbDto.TotalSeasons
+                    TotalSeasons = omdbDto.TotalSeasons,
+                    Poster = omdbDto.Poster,
+                    Runtime = omdbDto.Runtime,      
+                    Actors = omdbDto.Actors,
+                    Director = omdbDto.Director,
+                    Writer = omdbDto.Writer
                 };
 
                 var inserted = await _seriesRepository.InsertAsync(newSerie, autoSave: true);
@@ -114,6 +128,11 @@ namespace MySeries.Application.Series
                 existing.ImdbId = omdbDto.ImdbId ?? existing.ImdbId;
                 existing.ImdbRating = omdbDto.ImdbRating ?? existing.ImdbRating;
                 existing.TotalSeasons = omdbDto.TotalSeasons ?? existing.TotalSeasons;
+                existing.Poster = omdbDto.Poster ?? existing.Poster;
+                existing.Runtime = omdbDto.Runtime ?? existing.Runtime;
+                existing.Actors = omdbDto.Actors ?? existing.Actors;
+                existing.Director = omdbDto.Director ?? existing.Director;
+                existing.Writer = omdbDto.Writer ?? existing.Writer;
 
                 var updated = await _seriesRepository.UpdateAsync(existing, autoSave: true);
                 return MapToDto(updated);
@@ -125,15 +144,19 @@ namespace MySeries.Application.Series
         {
             return new OmdbSeriesDto
             {
-                //Id = s.Id,
                 Title = s.Title,
                 Genre = s.Genre,
                 Plot = s.Plot,
                 Year = s.Year,
                 Country = s.Country,
-                ImdbId = s.ImdbId,
+                ImdbId = s.ImdbId ?? string.Empty,
                 ImdbRating = s.ImdbRating,
-                TotalSeasons = s.TotalSeasons
+                TotalSeasons = s.TotalSeasons,
+                Runtime = s.Runtime,
+                Poster = s.Poster,
+                Actors = s.Actors,
+                Director = s.Director,
+                Writer = s.Writer
             };
         }
 
