@@ -1,6 +1,7 @@
 using MySeries.Application.Contracts;
 using MySeries.Application.Contracts.OmdbService;
 using MySeries.Series;
+using MySeries.SerieService;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -22,7 +23,7 @@ namespace MySeries.Application.Series
         }
 
         // Obtener detalle completo de una serie
-        public async Task<OmdbSeriesDto> GetFromOmdbAsync(string imdbId)
+        public async Task<serieDto> GetFromOmdbAsync(string imdbId)
         {
             return await _omdbSeriesService.GetByImdbIdAsync(imdbId);
         }
@@ -69,7 +70,7 @@ namespace MySeries.Application.Series
         }
 
         // --- NEW: Read series info from internal DB by Title ---
-        public async Task<OmdbSeriesDto> GetFromDatabaseByTitleAsync(string title)
+        public async Task<serieDto> GetFromDatabaseByTitleAsync(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentException("Title is required", nameof(title));
@@ -82,7 +83,7 @@ namespace MySeries.Application.Series
         }
 
         // --- NEW: Persist OMDb data into DB using Title ---
-        public async Task<OmdbSeriesDto> PersistFromOmdbByTitleAsync(OmdbSeriesDto omdbDto)
+        public async Task<serieDto> PersistFromOmdbByTitleAsync(serieDto omdbDto)
         {
             if (omdbDto is null)
                 throw new ArgumentNullException(nameof(omdbDto));
@@ -140,9 +141,9 @@ namespace MySeries.Application.Series
         }
 
         // Helper: map entity -> DTO
-        private OmdbSeriesDto MapToDto(Serie s)
+        private serieDto MapToDto(Serie s)
         {
-            return new OmdbSeriesDto
+            return new serieDto
             {
                 Title = s.Title,
                 Genre = s.Genre,

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using MySeries.Application.Contracts;
-using MySeries.Application.Contracts.OmdbService;
 using Volo.Abp.AspNetCore.Mvc;
+using MySeries.SerieService;
 
 namespace MySeries.Controllers;
 
@@ -18,7 +18,7 @@ public class SeriesController : AbpController
     }
 
     [HttpGet("{imdbId}")]
-    public async Task<OmdbSeriesDto> GetFromOmdbAsync(string imdbId)
+    public async Task<serieDto> GetFromOmdbAsync(string imdbId)
     {
         return await _seriesAppService.GetFromOmdbAsync(imdbId);
     }
@@ -30,14 +30,14 @@ public class SeriesController : AbpController
     }
 
     [HttpGet("Get-From-DB-by-title/{title}")]
-    public async Task<ActionResult<OmdbSeriesDto>> GetFromDatabaseByTitleAsync(string title)
+    public async Task<ActionResult<serieDto>> GetFromDatabaseByTitleAsync(string title)
     {
         var result = await _seriesAppService.GetFromDatabaseByTitleAsync(title);
         return Ok(result);
     }
 
     [HttpPost("Persist-Database")]
-    public async Task<ActionResult<OmdbSeriesDto>> PersistFromOmdbByTitleAsync([FromBody] OmdbSeriesDto omdbDto)
+    public async Task<ActionResult<serieDto>> PersistFromOmdbByTitleAsync([FromBody] serieDto omdbDto)
     {
         var result = await _seriesAppService.PersistFromOmdbByTitleAsync(omdbDto);
         return Ok(result);

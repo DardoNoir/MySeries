@@ -11,10 +11,6 @@ public class MySeriesPermissionDefinitionProvider : PermissionDefinitionProvider
     {
         var myGroup = context.AddGroup(MySeriesPermissions.GroupName);
 
-        var booksPermission = myGroup.AddPermission(MySeriesPermissions.Books.Default, L("Permission:Books"));
-        booksPermission.AddChild(MySeriesPermissions.Books.Create, L("Permission:Books.Create"));
-        booksPermission.AddChild(MySeriesPermissions.Books.Edit, L("Permission:Books.Edit"));
-        booksPermission.AddChild(MySeriesPermissions.Books.Delete, L("Permission:Books.Delete"));
         //Define your own permissions here. Example:
         //myGroup.AddPermission(MySeriesPermissions.MyPermission1, L("Permission:MyPermission1"));
     }

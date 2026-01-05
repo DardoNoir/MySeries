@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using MySeries.Application.Contracts.OmdbService;
+using MySeries.SerieService;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -29,10 +30,10 @@ namespace MySeries.Application
             return result;
         }
 
-        public async Task<OmdbSeriesDto> GetByImdbIdAsync(string imdbId)
+        public async Task<serieDto> GetByImdbIdAsync(string imdbId)
         {
             var url = $"?apikey={_options.ApiKey}&i={imdbId}&plot=full";
-            var result = await _httpClient.GetFromJsonAsync<OmdbSeriesDto>(url);
+            var result = await _httpClient.GetFromJsonAsync<serieDto>(url);
 
             if (result == null)
                 throw new InvalidOperationException($"No se pudo obtener detalles de OMDb para imdbId={imdbId}");
