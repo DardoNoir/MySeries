@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MySeries.Application.Contracts;
 using Volo.Abp.AspNetCore.Mvc;
 using MySeries.SerieService;
+using System.Collections;
 
 namespace MySeries.Controllers;
 
@@ -23,11 +24,11 @@ public class SeriesController : AbpController
         return await _seriesAppService.GetFromOmdbAsync(imdbId);
     }
 
-    [HttpGet("search")]
-    public async Task<OmdbSeriesSearchDto> SearchFromOmdbAsync([FromQuery] string title, [FromQuery] string? genre = null)
-    {
-        return await _seriesAppService.SearchFromOmdbAsync(title, genre);
-    }
+   // [HttpGet("search")]
+   // public async Task<ICollection<serieDto>> SearchFromOmdbAsync([FromQuery] string title, [FromQuery] string? genre = null)
+   // {
+    //    return await _seriesAppService.SearchFromOmdbAsync(title, genre);
+ //   }
 
     [HttpGet("Get-From-DB-by-title/{title}")]
     public async Task<ActionResult<serieDto>> GetFromDatabaseByTitleAsync(string title)

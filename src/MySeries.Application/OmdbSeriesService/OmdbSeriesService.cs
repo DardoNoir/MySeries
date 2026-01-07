@@ -2,6 +2,7 @@ using Microsoft.Extensions.Options;
 using MySeries.Application.Contracts.OmdbService;
 using MySeries.SerieService;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -19,10 +20,10 @@ namespace MySeries.Application
             _options = options.Value;
         }
 
-        public async Task<OmdbSeriesSearchDto> SearchByTitleAsync(string title)
+        public async Task<ICollection<serieDto>> SearchByTitleAsync(string title)
         {
             var url = $"?apikey={_options.ApiKey}&type=series&s={title}";
-            var result = await _httpClient.GetFromJsonAsync<OmdbSeriesSearchDto>(url);
+            var result = await _httpClient.GetFromJsonAsync<ICollection<serieDto>>(url);
 
             if (result == null)
                 throw new InvalidOperationException($"No se pudo obtener resultados de OMDb para title={title}");

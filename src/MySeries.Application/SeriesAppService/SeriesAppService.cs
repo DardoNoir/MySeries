@@ -11,7 +11,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace MySeries.Application.Series
 {
-    public class SeriesAppService : ApplicationService, ISeriesAppService
+    public class SeriesAppService : ApplicationService
     {
         private readonly IOmdbSeriesService _omdbSeriesService;
         private readonly IRepository<Serie, Guid> _seriesRepository;
@@ -31,43 +31,6 @@ namespace MySeries.Application.Series
  
         // Buscar series por titulo y opcionalmente filtrar por genero.
         // Devuelve OmdbSeriesSearchDto enriquecido con el genero.
- 
-        public async Task<OmdbSeriesSearchDto> SearchFromOmdbAsync(string title, string? genre = null)
-        {
-            var searchResult = await _omdbSeriesService.SearchByTitleAsync(title);
-
-            if (searchResult?.Search == null)
-                return searchResult ?? new OmdbSeriesSearchDto();
-
-            var filtered = new List<OmdbSeriesSearchItemDto>();
-
-            foreach (var item in searchResult.Search)
-            {
-                var details = await _omdbSeriesService.GetByImdbIdAsync(item.ImdbId);
-
-                item.Genre = details.Genre; // enriquecemos el 
-                item.Writer = details.Writer;
-                item.Director = details.Director;
-                item.Actors = details.Actors;
-                item.Plot = details.Plot;
-                item.Runtime = details.Runtime;
-                item.ImdbRating = details.ImdbRating;
-                item.TotalSeasons = details.TotalSeasons;
-                item.Country = details.Country;
-                
-                if (string.IsNullOrWhiteSpace(genre) ||
-                    (item.Genre != null && item.Genre.Contains(genre, StringComparison.OrdinalIgnoreCase)))
-                {
-                    filtered.Add(item);
-                }
-                
-            }
-            
-            searchResult.Search = filtered;
-            searchResult.TotalResults = filtered.Count.ToString();
-            
-            return searchResult;
-        }
 
         // --- NEW: Read series info from internal DB by Title ---
         public async Task<serieDto> GetFromDatabaseByTitleAsync(string title)
