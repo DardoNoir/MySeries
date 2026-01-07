@@ -15,6 +15,10 @@ using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using MySeries.Series;
+using MySeries.Watchlists;
+using MySeries.Notifications;
+using MySeries.Qualifications;
+using MySeries.Usuarios;
 
 namespace MySeries.EntityFrameworkCore;
 
@@ -29,9 +33,6 @@ public class MySeriesDbContext :
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
     // Agregar las entidades aqui
 
-    public DbSet<Serie> series { get; set; }
-    public DbSet<Episodio> episodios { get; set; }
-    public DbSet<Temporada> temporadas { get; set; }
 
     #region Entities from the modules
 
@@ -47,7 +48,7 @@ public class MySeriesDbContext :
      */
 
     // Identity
-    public DbSet<IdentityUser> Users { get; set; }
+     public DbSet<IdentityUser> Users { get; set; }
     public DbSet<IdentityRole> Roles { get; set; }
     public DbSet<IdentityClaimType> ClaimTypes { get; set; }
     public DbSet<OrganizationUnit> OrganizationUnits { get; set; }
@@ -61,6 +62,13 @@ public class MySeriesDbContext :
     public DbSet<TenantConnectionString> TenantConnectionStrings { get; set; }
 
     #endregion
+
+    
+    public DbSet<Serie> series { get; set; }
+    public DbSet<WatchList> WatchLists { get; set; }
+    public DbSet<Qualification> Qualifications { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
+    public DbSet<Usuario> Usuarios { get; set; }
 
     public MySeriesDbContext(DbContextOptions<MySeriesDbContext> options)
         : base(options)
@@ -88,54 +96,41 @@ public class MySeriesDbContext :
         // --- Configuración de Serie ---
         builder.Entity<Serie>(b =>
         {
-            b.ToTable("AppSeries");
-            b.HasKey(x => x.Id);
-
+            b.ToTable(MySeriesConsts.DbTablePrefix + "Series", MySeriesConsts.DbSchema);
+            b.ConfigureByConvention();
             b.Property(x => x.Title).IsRequired().HasMaxLength(256);
-            b.Property(x => x.Genre).IsRequired().HasMaxLength(100);
-            b.Property(x => x.Plot).HasMaxLength(2000);
-            b.Property(x => x.Year).IsRequired();
-            b.Property(x => x.Country).HasMaxLength(100);
-            b.Property(x => x.ImdbId).HasMaxLength(20);
-            b.Property(x => x.ImdbRating).HasMaxLength(10);
-            b.Property(x => x.TotalSeasons).HasMaxLength(10);
-            b.Property(x => x.Poster).HasMaxLength(500);
-            b.Property(x => x.Runtime).HasMaxLength(50);
-            b.Property(x => x.Actors).HasMaxLength(1000);
-            b.Property(x => x.Director).HasMaxLength(256);
-            b.Property(x => x.Writer).HasMaxLength(1000);
-
-            // Relación Serie -> Temporadas
-            b.HasMany(s => s.Temporadas)
-             .WithOne(t => t.Serie)
-             .HasForeignKey(t => t.SerieId)
-             .OnDelete(DeleteBehavior.Restrict);
+            b.Property(x => x.Genre).IsRequired().HasMaxLength(128);
+            b.Property(x => x.Year).IsRequired().HasMaxLength(4);
         });
 
-
-        // --- Configuración de Temporada ---
-        builder.Entity<Temporada>(b =>
+        // --- Configuración de WatchList  ---
+        builder.Entity<WatchList>(b =>
         {
-            b.ToTable("AppTemporadas");
-            b.HasKey(x => x.Id);
-
-            b.Property(x => x.Description).HasMaxLength(2000);
-
-            // Relación Temporada -> Episodios
-            b.HasMany(t => t.Episodios)
-             .WithOne(e => e.Temporada)
-             .HasForeignKey(e => e.TemporadaId)
-             .OnDelete(DeleteBehavior.Cascade); // 👌 aquí sí cascade
+            b.ToTable(MySeriesConsts.DbTablePrefix + "WatchLists", MySeriesConsts.DbSchema);
+            b.ConfigureByConvention();
         });
 
-        // --- Configuración de Episodio ---
-        builder.Entity<Episodio>(b =>
+        // --- Configuración de Qualification  ---
+        builder.Entity<Qualification>(b =>
         {
-            b.ToTable("AppEpisodios");
-            b.HasKey(x => x.Id);
+            b.ToTable(MySeriesConsts.DbTablePrefix + "Qualifications", MySeriesConsts.DbSchema);
+            b.ConfigureByConvention();
+        });
 
-            b.Property(x => x.Title).IsRequired().HasMaxLength(256);
-            b.Property(x => x.Description).HasMaxLength(2000);
+        // --- Configuración de Notification  ---
+        builder.Entity<Notification>(b =>
+        {
+            b.ToTable(MySeriesConsts.DbTablePrefix + "Notifications", MySeriesConsts.DbSchema);
+            b.ConfigureByConvention();
+        });
+
+        // --- Configuración de Usuario  ---
+        builder.Entity<Usuario>(b =>
+        {
+            b.ToTable(MySeriesConsts.DbTablePrefix + "Usuarios", MySeriesConsts.DbSchema);
+            b.ConfigureByConvention();
+            b.Property(x => x.UserName).IsRequired().HasMaxLength(60);
+            b.Property(x => x.Password).IsRequired().HasMaxLength(15);
         });
 
         /* Configure your own tables/entities inside here */

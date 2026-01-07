@@ -22,6 +22,5 @@ namespace MySeries.Series
         public string? Director { get; set; }    
         public string? Writer { get; set; }     
 
-        public ICollection<Temporada> Temporadas { get; set; } = new List<Temporada>();
     }
 }
