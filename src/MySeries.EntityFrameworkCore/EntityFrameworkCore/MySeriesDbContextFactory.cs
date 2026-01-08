@@ -24,10 +24,11 @@ public class MySeriesDbContextFactory : IDesignTimeDbContextFactory<MySeriesDbCo
 
     private static IConfigurationRoot BuildConfiguration()
     {
-        var builder = new ConfigurationBuilder()
-            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../MySeries.DbMigrator/"))
-            .AddJsonFile("appsettings.json", optional: false);
-
-        return builder.Build();
+        return new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false)
+            .AddJsonFile("appsettings.secrets.json", optional: true)
+            .Build();
     }
+
 }
