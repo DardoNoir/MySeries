@@ -9,8 +9,9 @@ namespace MySeries.Notifications
 {
     public interface INotificationsAppService: IApplicationService
     {
-        // task SendNotificationAsync(int userId, string message);
-        // task NotifyByEmailAsync(int userId, string message);
-        // task MarkReadenAsync(int notificationId);
+        Task<List<NotificationDto>> GetUserNotificationsAsync(int userId);
+        Task SendNotificationAsync(int userId, string message);
+        Task NotifyByEmailAsync(int userId, string message);
+        Task MarkReadenAsync(int notificationId);
     }
 }
