@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
+using MySeries.MonitoringService;
 
-namespace MySeries.Monitoring
+namespace Myseries.Monitoring
 {
     public interface IMonitoringAppService 
     {
-       //Task <List<MonitoringDto>> GetMonitoringDataAsync(); 
+       Task <List<MonitoringDto>> GetMonitoringDataAsync(); 
        
     }
 }
