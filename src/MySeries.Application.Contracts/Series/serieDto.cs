@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace MySeries.SerieService
 {
-    public class serieDto
+    public class SerieDto
     {
         [JsonPropertyName("imdbID")]
         public string ImdbId { get; set; } = default!; // imdbID in OMDb

@@ -1,16 +1,18 @@
+using MySeries.Series;
 using System;
 using System.Collections.Generic;
-using MySeries.Series;
 using Volo.Abp.Domain.Entities;
+using static Volo.Abp.Identity.Settings.IdentitySettingNames;
 
 namespace MySeries.Watchlists
 {
     public class WatchList : AggregateRoot<int>
     {
-        public int UserId { get; set; }
+        public Guid? UserId { get; set; }
         public List<Serie> SeriesList { get; set; }
 
-        public WatchList()
+        // Constructor de Dominio
+        public WatchList(Guid UserId)
         {
             SeriesList = new List<Serie>();
         }
