@@ -11,9 +11,15 @@ namespace MySeries.Watchlists
         public Guid? UserId { get; set; }
         public List<Serie> SeriesList { get; set; }
 
+        // Constructor EF core
+        protected WatchList() { }
+        
+        
+        
         // Constructor de Dominio
-        public WatchList(Guid UserId)
+        public WatchList(Guid idUsuario)
         {
+            UserId = idUsuario;
             SeriesList = new List<Serie>();
         }
 
