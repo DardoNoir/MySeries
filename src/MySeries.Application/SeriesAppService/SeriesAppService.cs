@@ -23,7 +23,7 @@ namespace MySeries.Application.Series
         }
 
         // Obtener detalle completo de una serie
-        public async Task<serieDto> GetFromOmdbAsync(string imdbId)
+        public async Task<SerieDto> GetFromOmdbAsync(string imdbId)
         {
             return await _omdbSeriesService.GetByImdbIdAsync(imdbId);
         }
