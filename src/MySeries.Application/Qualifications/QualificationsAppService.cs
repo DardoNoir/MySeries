@@ -107,7 +107,7 @@ namespace MySeries.Qualifications
 
             // Actualizar la calificación y reseña
             qualificated.Score = NewScore;
-            qualificated.Review = NewReview
+            qualificated.Review = NewReview;
             await _qualificationsRepository.UpdateAsync(qualificated);
         }
     }
