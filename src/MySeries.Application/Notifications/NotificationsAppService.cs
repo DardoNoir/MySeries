@@ -4,12 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Emailing;
 
 namespace MySeries.Notifications
 {
-    public class NotificationsAppService : INotificationsAppService
+    public class NotificationsAppService :  ApplicationService ,INotificationsAppService
     {
         private readonly IRepository<Notification, int> _notificationRepository;
         private readonly IEmailSender _emailSender;
