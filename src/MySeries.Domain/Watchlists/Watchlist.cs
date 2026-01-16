@@ -8,7 +8,7 @@ namespace MySeries.Watchlists
 {
     public class WatchList : AggregateRoot<int>
     {
-        public Guid? UserId { get; set; }
+        public int UserId { get; set; }
         public List<Serie> SeriesList { get; set; }
 
         // Constructor EF core
@@ -16,12 +16,13 @@ namespace MySeries.Watchlists
         
         
         
-        // Constructor de Dominio
-        public WatchList(Guid idUsuario)
+        // The EF Core protected constructor is sufficient for entity framework usage.
+        // The domain constructor should accept a userId parameter for proper initialization.
+
+        public WatchList(int userId)
         {
-            UserId = idUsuario;
+            UserId = userId;
             SeriesList = new List<Serie>();
         }
-
     }
 }

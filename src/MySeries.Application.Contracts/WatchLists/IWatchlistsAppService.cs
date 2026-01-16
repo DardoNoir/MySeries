@@ -10,8 +10,8 @@ namespace MySeries.WatchLists
 {
     public interface IWatchlistsAppService : IApplicationService
     {
-        Task AddSeriesAsync(Guid seriesId);
-        Task RemoveSeriesAsync(Guid seriesId);
-        Task<ICollection<SerieDto>> GetWatchlistAsync();
+        Task AddSeriesAsync(int seriesId, int userId);
+        Task RemoveSeriesAsync(int seriesId, int userId);
+        Task<ICollection<SerieDto>> GetWatchlistAsync(int userId);
     }
 }

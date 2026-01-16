@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace MySeries.Migrations
 {
     [DbContext(typeof(MySeriesDbContext))]
-    [Migration("20260108012653_Entidades")]
-    partial class Entidades
+    [Migration("20260116170312_ModificandoEntidades")]
+    partial class ModificandoEntidades
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -93,8 +93,8 @@ namespace MySeries.Migrations
                     b.Property<int>("SerieId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -103,8 +103,11 @@ namespace MySeries.Migrations
 
             modelBuilder.Entity("MySeries.Series.Serie", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Actors")
                         .HasColumnType("nvarchar(max)");
@@ -206,9 +209,6 @@ namespace MySeries.Migrations
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .IsRequired()
