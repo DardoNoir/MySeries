@@ -10,12 +10,10 @@
 
   <ItemGroup>
     <Compile Remove="Monitoring\MonitoringAppService.cs" />
-    <Compile Remove="Series\SerieAppService.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="Monitoring\MonitoringAppService.cs" />
-    <None Include="Series\SerieAppService.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -41,7 +41,6 @@ using Volo.Abp.Studio.Client.AspNetCore;
 using Volo.Abp.Security.Claims;
 using MySeries.Application.Contracts;
 using MySeries.Application;
-using MySeries.Application.Contracts.OmdbService;
 
 namespace MySeries;
 
@@ -112,23 +111,7 @@ public class MySeriesHttpApiHostModule : AbpModule
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
             });
         }
-            // Vinculamos OmdbOptions a la configuración
-            Configure<OmdbOptions>(configuration.GetSection("Omdb"));
-
-            // Obtenemos OmdbOptions tipado
-            var omdbOptions = configuration.GetSection("Omdb").Get<OmdbOptions>();
-
-            if (string.IsNullOrWhiteSpace(omdbOptions?.BaseUrl))
-            {
-                throw new InvalidOperationException
-                ("La configuración Omdb:BaseUrl no está definida en appsettings.json");
-            }
-
-            // Registramos HttpClient con la BaseUrl
-            context.Services.AddHttpClient<IOmdbSeriesService, OmdbSeriesService>(client =>
-            {
-                client.BaseAddress = new Uri(omdbOptions.BaseUrl);
-            });
+           
 
         ConfigureAuthentication(context);
         ConfigureUrls(configuration);
