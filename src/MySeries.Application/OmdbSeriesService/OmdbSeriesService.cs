@@ -20,10 +20,10 @@ namespace MySeries.Application
             _options = options.Value;
         }
 
-        public async Task<ICollection<serieDto>> SearchByTitleAsync(string title)
+        public async Task<ICollection<SerieDto>> SearchByTitleAsync(string title)
         {
             var url = $"?apikey={_options.ApiKey}&type=series&s={title}";
-            var result = await _httpClient.GetFromJsonAsync<ICollection<serieDto>>(url);
+            var result = await _httpClient.GetFromJsonAsync<ICollection<SerieDto>>(url);
 
             if (result == null)
                 throw new InvalidOperationException($"No se pudo obtener resultados de OMDb para title={title}");
@@ -31,10 +31,10 @@ namespace MySeries.Application
             return result;
         }
 
-        public async Task<serieDto> GetByImdbIdAsync(string imdbId)
+        public async Task<SerieDto> GetByImdbIdAsync(string imdbId)
         {
             var url = $"?apikey={_options.ApiKey}&i={imdbId}&plot=full";
-            var result = await _httpClient.GetFromJsonAsync<serieDto>(url);
+            var result = await _httpClient.GetFromJsonAsync<SerieDto>(url);
 
             if (result == null)
                 throw new InvalidOperationException($"No se pudo obtener detalles de OMDb para imdbId={imdbId}");

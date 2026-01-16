@@ -19,7 +19,7 @@ public class SeriesController : AbpController
     }
 
     [HttpGet("{imdbId}")]
-    public async Task<serieDto> GetFromOmdbAsync(string imdbId)
+    public async Task<SerieDto> GetFromOmdbAsync(string imdbId)
     {
         return await _seriesAppService.GetFromOmdbAsync(imdbId);
     }
@@ -31,14 +31,14 @@ public class SeriesController : AbpController
  //   }
 
     [HttpGet("Get-From-DB-by-title/{title}")]
-    public async Task<ActionResult<serieDto>> GetFromDatabaseByTitleAsync(string title)
+    public async Task<ActionResult<SerieDto>> GetFromDatabaseByTitleAsync(string title)
     {
         var result = await _seriesAppService.GetFromDatabaseByTitleAsync(title);
         return Ok(result);
     }
 
     [HttpPost("Persist-Database")]
-    public async Task<ActionResult<serieDto>> PersistFromOmdbByTitleAsync([FromBody] serieDto omdbDto)
+    public async Task<ActionResult<SerieDto>> PersistFromOmdbByTitleAsync([FromBody] SerieDto omdbDto)
     {
         var result = await _seriesAppService.PersistFromOmdbByTitleAsync(omdbDto);
         return Ok(result);

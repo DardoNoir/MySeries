@@ -4,7 +4,7 @@ using Volo.Abp.Domain.Entities;
 
 namespace MySeries.Series
 {
-    public class Serie : AggregateRoot<Guid>
+    public class Serie : AggregateRoot<int>
     {
         public required string Title { get; set; }
         public required string Genre { get; set; }
