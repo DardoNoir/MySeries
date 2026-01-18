@@ -6,9 +6,9 @@ using MySeries.SerieService;
 
 namespace MySeries.Application.Contracts
 {
-    public interface ISeriesAppService : ICrudAppService<serieDto,int, PagedAndSortedResultRequestDto>
+    public interface ISeriesAppService : ICrudAppService<SerieDto,int, PagedAndSortedResultRequestDto>
     {
-        Task<ICollection<serieDto>> SearchByTitleAsync(string title);
+        Task<ICollection<SerieDto>> SearchByTitleAsync(string title);
 
     }
 }

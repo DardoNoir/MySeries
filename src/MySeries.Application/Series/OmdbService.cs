@@ -13,69 +13,35 @@ namespace MySeries.Series
 {
     public class OmdbService : ISeriesApiService, ITransientDependency
     {
-        private static readonly string apiKey = "fa5ffac0"; // Reemplaza con tu clave API de OMDb.
+        private static readonly string apiKey = "844b1b8b"; // Reemplaza con tu clave API de OMDb.
         private static readonly string baseUrl = "http://www.omdbapi.com/";
 
-        public async Task<ICollection<serieDto>> GetSeriesAsync(string title)
+        public async Task<ICollection<SerieDto>> GetSeriesAsync(string title)
         {
-            using HttpClient client = new HttpClient();
+            using var client = new HttpClient();
 
-            List<serieDto> series = new List<serieDto>();
+            var url = $"{baseUrl}?s={title}&type=series&apikey={apiKey}";
 
-            string url = $"{baseUrl}?s={title}&apikey={apiKey}&type=series";
+            var response = await client.GetAsync(url);
+            response.EnsureSuccessStatusCode();
 
-            try
+            var json = await response.Content.ReadAsStringAsync();
+
+            var omdbResponse = JsonConvert.DeserializeObject<OmdbSearchResponse>(json);
+
+            var result = new List<SerieDto>();
+
+            foreach (var item in omdbResponse?.Search ?? [])
             {
-                // Hacer la solicitud HTTP y obtener la respuesta como string
-                var response = await client.GetAsync(url);
-                response.EnsureSuccessStatusCode();
-
-                string jsonResponse = await response.Content.ReadAsStringAsync();
-
-                // Deserializar la respuesta JSON a un objeto SearchResponse
-                var searchResponse = JsonConvert.DeserializeObject<SearchResponse>(jsonResponse);
-
-                // Retornar la lista de series si existen
-                var seriesOmdb = searchResponse?.Search ?? new List<SerieOmdb>();
-
-                foreach (var serieOmdb in seriesOmdb)
+                result.Add(new SerieDto
                 {
-                    series.Add(new serieDto
-                    {
-                        Title = serieOmdb.Title.ToString(),
-                        Year = serieOmdb.Year.ToString(),
-                        Genre = serieOmdb.Genre.ToString()
-                    });
-                }
-                return series;
+                    Title = item.Title,
+                    Year = item.Year,
+                    Poster = item.Poster,
+                });
             }
-            catch (HttpRequestException e)
-            {
-                throw new Exception("Se ha producido un error en la búsqueda de la serie", e);
-            }
-        }
 
-        private class SearchResponse
-        {
-            [JsonProperty("Search")]
-            public List<SerieOmdb> Search { get; set; }
-        }
-        private class SerieOmdb
-        {
-            public required string Title { get; set; }
-            public required string Genre { get; set; }
-            public string? Plot { get; set; }
-            public required string Year { get; set; }
-            public string? Country { get; set; }
-            public string? ImdbId { get; set; } // relation with OMDb
-            public string? ImdbRating { get; set; }
-            public string? TotalSeasons { get; set; } // temporadas
-            public string? Poster { get; set; }
-            public string? Runtime { get; set; }
-            public string? Actors { get; set; }
-            public string? Director { get; set; }
-            public string? Writer { get; set; }
-
+            return result;
         }
     }
 }

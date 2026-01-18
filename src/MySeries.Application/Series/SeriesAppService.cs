@@ -17,18 +17,16 @@ using Volo.Abp.DependencyInjection;
 
 namespace MySeries.Series
 {
-    public class SerieAppService : CrudAppService<Serie, serieDto, int, PagedAndSortedResultRequestDto, serieDto, serieDto>, ISeriesAppService, ITransientDependency
+    public class SerieAppService : CrudAppService<Serie, SerieDto, int, PagedAndSortedResultRequestDto>, ISeriesAppService
     {
         private readonly ISeriesApiService _seriesApiService;
-        private readonly IRepository<Serie, int> _serieRepository;
         public SerieAppService(IRepository<Serie, int> repository, ISeriesApiService seriesApiService) : base(repository)
         {
             _seriesApiService =  seriesApiService;
-            _serieRepository = repository;
 
         }
 
-        public async Task<ICollection<serieDto>> SearchByTitleAsync(string title)
+        public async Task<ICollection<SerieDto>> SearchByTitleAsync(string title)
         {
             return await _seriesApiService.GetSeriesAsync(title);
         }
