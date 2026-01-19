@@ -29,6 +29,7 @@ namespace MySeries.Qualifications
         }
 
         // Calificar una serie
+        
         public async Task QualificationsSeriesAsync(int userId, int serieId, int Score, string? Review)
         {
             // Verificar que esté autenticado
