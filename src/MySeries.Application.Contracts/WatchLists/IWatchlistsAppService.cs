@@ -1,3 +1,4 @@
+using MySeries.SerieService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,8 @@ namespace MySeries.WatchLists
 {
     public interface IWatchlistsAppService : IApplicationService
     {
-        // task AddSeriesAsync(int seriesId, int UserId);
-        // task RemoveSeriesAsync(int seriesId, int UserId);
-        // task<ICollection<SeriesDto>> GetWatchlistAsync(int UserId);
+        Task AddSeriesAsync(int seriesId, int userId);
+        Task RemoveSeriesAsync(int seriesId, int userId);
+        Task<ICollection<SerieDto>> GetWatchlistAsync(int userId);
     }
 }

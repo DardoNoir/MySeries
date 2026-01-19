@@ -17,7 +17,6 @@ using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using MySeries.Series;
 using MySeries.Watchlists;
 using MySeries.Notifications;
-using MySeries.Qualifications;
 using MySeries.Usuarios;
 
 namespace MySeries.EntityFrameworkCore;

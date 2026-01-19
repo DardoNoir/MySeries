@@ -7,6 +7,8 @@ using Volo.Abp.Modularity;
 using Volo.Abp.PermissionManagement;
 using Volo.Abp.SettingManagement;
 using Volo.Abp.TenantManagement;
+using Microsoft.Extensions.DependencyInjection;
+using MySeries.Notifications;
 
 namespace MySeries;
 
@@ -18,7 +20,8 @@ namespace MySeries;
     typeof(AbpIdentityApplicationModule),
     typeof(AbpAccountApplicationModule),
     typeof(AbpTenantManagementApplicationModule),
-    typeof(AbpSettingManagementApplicationModule)
+    typeof(AbpSettingManagementApplicationModule),
+    typeof(AbpAutoMapperModule)
     )]
 public class MySeriesApplicationModule : AbpModule
 {
@@ -31,5 +34,6 @@ public class MySeriesApplicationModule : AbpModule
 
         context.Services.AddTransient<MySeries.Series.ISeriesApiService, MySeries.Series.OmdbService>();
     
+        context.Services.AddTransient<INotificationsAppService, NotificationsAppService>();
     }
 }
