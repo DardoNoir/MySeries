@@ -14,16 +14,16 @@ namespace MySeries.Application.Series
     public class SeriesAppService : ApplicationService
     {
         private readonly IOmdbSeriesService _omdbSeriesService;
-        private readonly IRepository<Serie, Guid> _seriesRepository;
+        private readonly IRepository<Serie, int> _seriesRepository;
 
-        public SeriesAppService(IOmdbSeriesService omdbSeriesService, IRepository<Serie, Guid> seriesRepository)
+        public SeriesAppService(IOmdbSeriesService omdbSeriesService, IRepository<Serie, int> seriesRepository)
         {
             _omdbSeriesService = omdbSeriesService;
             _seriesRepository = seriesRepository;
         }
 
         // Obtener detalle completo de una serie
-        public async Task<serieDto> GetFromOmdbAsync(string imdbId)
+        public async Task<SerieDto> GetFromOmdbAsync(string imdbId)
         {
             return await _omdbSeriesService.GetByImdbIdAsync(imdbId);
         }
@@ -33,7 +33,7 @@ namespace MySeries.Application.Series
         // Devuelve OmdbSeriesSearchDto enriquecido con el genero.
 
         // --- NEW: Read series info from internal DB by Title ---
-        public async Task<serieDto> GetFromDatabaseByTitleAsync(string title)
+        public async Task<SerieDto> GetFromDatabaseByTitleAsync(string title)
         {
             if (string.IsNullOrWhiteSpace(title))
                 throw new ArgumentException("Title is required", nameof(title));
@@ -46,7 +46,7 @@ namespace MySeries.Application.Series
         }
 
         // --- NEW: Persist OMDb data into DB using Title ---
-        public async Task<serieDto> PersistFromOmdbByTitleAsync(serieDto omdbDto)
+        public async Task<SerieDto> PersistFromOmdbByTitleAsync(SerieDto omdbDto)
         {
             if (omdbDto is null)
                 throw new ArgumentNullException(nameof(omdbDto));
@@ -104,9 +104,9 @@ namespace MySeries.Application.Series
         }
 
         // Helper: map entity -> DTO
-        private serieDto MapToDto(Serie s)
+        private SerieDto MapToDto(Serie s)
         {
-            return new serieDto
+            return new SerieDto
             {
                 Title = s.Title,
                 Genre = s.Genre,

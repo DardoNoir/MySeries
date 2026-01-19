@@ -8,7 +8,7 @@ namespace MySeries.Watchlists
 {
     public class WatchList : AggregateRoot<int>
     {
-        public Guid? UserId { get; set; }
+        public int UserId { get; set; }
         public List<Serie> SeriesList { get; set; }
 
         // Constructor EF core

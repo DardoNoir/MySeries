@@ -7,11 +7,11 @@ using Volo.Abp.Application.Services;
 
 namespace MySeries.Qualifications
 {
-    public interface IQualificationsAppService: IApplicationService
+    public interface IQualificationsAppService : IApplicationService
     {
-        Task QualificationsSeriesAsync(Guid serieId, int Score, string? Review = null);
+        Task QualificationsSeriesAsync(int userId, int serieId, int Score, string? Review = null);
 
-        Task ModifyQualificationAsync(Guid serieId, int Score, string? Review = null);
+        Task ModifyQualificationAsync(int userId, int serieId, int Score, string? Review = null);
 
     }
 }
