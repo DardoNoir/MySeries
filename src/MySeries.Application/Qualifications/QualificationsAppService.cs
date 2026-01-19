@@ -1,4 +1,5 @@
-﻿using MySeries.Series;
+﻿using Microsoft.EntityFrameworkCore;
+using MySeries.Series;
 using MySeries.Watchlists;
 using System;
 using System.Collections.Generic;
@@ -16,27 +17,22 @@ namespace MySeries.Qualifications
     {
         private readonly IRepository<Qualification, int> _qualificationsRepository;
         private readonly IRepository<WatchList, int> _watchlistsRepository;
-        private readonly IRepository<Serie, Guid> _seriesRepository;
-        private readonly ICurrentUser _currentUser;
-
+        private readonly IRepository<Serie, int> _seriesRepository;
         public QualificationsAppService(
             IRepository<Qualification, int> qualificationsRepository,
             IRepository<WatchList, int> watchlistsRepository,
-            IRepository<Serie, Guid> seriesRepository,
-            ICurrentUser currentUser)
+            IRepository<Serie, int> seriesRepository)
         {
             _qualificationsRepository = qualificationsRepository;
             _watchlistsRepository = watchlistsRepository;
             _seriesRepository = seriesRepository;
-            _currentUser = currentUser;
         }
 
         // Calificar una serie
-        public async Task QualificationsSeriesAsync(Guid serieId, int Score, string? Review = null)
+        public async Task QualificationsSeriesAsync(int userId, int serieId, int Score, string? Review)
         {
-            // Obtener el Id del usuario actual y verificar que esté autenticado
-            Guid? userId = _currentUser.Id;
-            if (!_currentUser.Id.HasValue)
+            // Verificar que esté autenticado
+            if (userId <= 0) 
                 throw new BusinessException("Usuario no autenticado.");
 
             // Validar que la puntuación esté entre 1 y 10
@@ -49,8 +45,12 @@ namespace MySeries.Qualifications
                 throw new BusinessException("La serie no existe.");
 
             // Verificar que la serie esté en la lista de seguimiento del usuario
-            var watchlist = await _watchlistsRepository.
-                FirstOrDefaultAsync(w => w.UserId == userId && w.SeriesList.Contains(serie));
+            var watchlist = await (await _watchlistsRepository
+                .WithDetailsAsync(w => w.SeriesList))
+                .FirstOrDefaultAsync(w =>
+                w.UserId == userId &&
+                w.SeriesList.Any(s => s.Id == serieId));
+
             if (watchlist == null)
                 throw new BusinessException("La serie no está en la lista de seguimiento del usuario.");
 
@@ -69,17 +69,16 @@ namespace MySeries.Qualifications
             // Si no la ha calificado, crear una nueva calificación
             else
             {
-                var qualification = new Qualification(userId.Value, serieId, Score, Review);
+                var qualification = new Qualification(userId, serieId, Score, Review);
                 await _qualificationsRepository.InsertAsync(qualification);
             }
         }
 
         // Modificar una calificación existente
-        public async Task ModifyQualificationAsync(Guid serieId, int NewScore, string? NewReview = null)
+        public async Task ModifyQualificationAsync(int userId, int serieId, int NewScore, string? NewReview)
         {
-            // Obtener el Id del usuario actual y verificar que esté autenticado
-            Guid? userId = _currentUser.Id;
-            if (!userId.HasValue)
+            // Verificar que esté autenticado
+            if (userId <= 0)
                 throw new BusinessException("Usuario no autenticado.");
 
             // Validar que la nueva puntuación esté entre 1 y 10
@@ -92,8 +91,12 @@ namespace MySeries.Qualifications
                 throw new BusinessException("La serie no existe.");
 
             // Verificar que la serie esté en la lista de seguimiento del usuario
-            var watchlist = await _watchlistsRepository.
-                FirstOrDefaultAsync(w => w.UserId == userId && w.SeriesList.Contains(serie));
+            var watchlist = await (await _watchlistsRepository
+                .WithDetailsAsync(w => w.SeriesList))
+                .FirstOrDefaultAsync(w =>
+                    w.UserId == userId &&
+                    w.SeriesList.Any(s => s.Id == serieId));
+
             if (watchlist == null)
                 throw new BusinessException("La serie no está en la lista de seguimiento del usuario.");
 

@@ -7,11 +7,12 @@ namespace MySeries.Watchlists
 {
     public class WatchList : AggregateRoot<int>
     {
-        public Guid? UserId { get; set; }
+        public int UserId { get; set; }
         public List<Serie> SeriesList { get; set; }
 
-        public WatchList()
+        public WatchList(int id)
         {
+            UserId = id;
             SeriesList = new List<Serie>();
         }
 

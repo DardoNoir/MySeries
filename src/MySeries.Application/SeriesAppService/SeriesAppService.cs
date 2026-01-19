@@ -14,9 +14,9 @@ namespace MySeries.Application.Series
     public class SeriesAppService : ApplicationService
     {
         private readonly IOmdbSeriesService _omdbSeriesService;
-        private readonly IRepository<Serie, Guid> _seriesRepository;
+        private readonly IRepository<Serie, int> _seriesRepository;
 
-        public SeriesAppService(IOmdbSeriesService omdbSeriesService, IRepository<Serie, Guid> seriesRepository)
+        public SeriesAppService(IOmdbSeriesService omdbSeriesService, IRepository<Serie, int> seriesRepository)
         {
             _omdbSeriesService = omdbSeriesService;
             _seriesRepository = seriesRepository;
