@@ -32,34 +32,38 @@ namespace MySeries.Watchlists
         //Agregar una serie a la watchlist del usuario actual
         public async Task AddSeriesAsync(int seriesId, int userId)
         {
-            // Verificar si está autenticado
             if (userId <= 0)
                 throw new BusinessException("Usuario no Autenticado.");
-            
-            // Verificar si la serie existe
+
             var serie = await _serieRepository.GetAsync(seriesId);
             if (serie == null)
                 throw new BusinessException("Serie no encontrada.");
 
-            // Obtener o crear la watchlist del usuario
-            var watchlist = await _watchlistRepository.FirstOrDefaultAsync(w => w.UserId == userId);
+            var watchlist = await (await _watchlistRepository
+                    .WithDetailsAsync(w => w.SeriesList))
+                .FirstOrDefaultAsync(w => w.UserId == userId);
+
             if (watchlist == null)
             {
                 watchlist = new WatchList(userId)
                 {
-                    UserId = userId,
-                    SeriesList = new List<Serie> { serie }
+                    SeriesList = new List<Serie>()
                 };
+
+                watchlist.SeriesList.Add(serie);
                 await _watchlistRepository.InsertAsync(watchlist);
+                return;
             }
 
-            // Agregar la serie a la watchlist si no está ya presente
+            watchlist.SeriesList ??= new List<Serie>();
+
             if (!watchlist.SeriesList.Any(s => s.Id == seriesId))
             {
                 watchlist.SeriesList.Add(serie);
                 await _watchlistRepository.UpdateAsync(watchlist);
             }
         }
+
 
         public async Task RemoveSeriesAsync(int seriesId, int userId)
         {
