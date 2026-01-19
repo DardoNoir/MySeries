@@ -9,9 +9,9 @@ namespace MySeries.Qualifications
 {
     public interface IQualificationsAppService: IApplicationService
     {
-        Task QualificationsSeriesAsync(int userId, int serieId, int Score, string? Review = null);
+        // task QualificationsSeriesAsync(int serieId, int Score, string? Review = null);
 
-        Task ModifyQualificationAsync(int userId, int serieId, int Score, string? Review = null);
+        // task ModifyQualificationAsync(int serieId, int Score, string? Review = null);
 
     }
 }
