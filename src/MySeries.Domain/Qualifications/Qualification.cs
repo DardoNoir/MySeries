@@ -8,7 +8,10 @@ namespace MySeries.Qualifications
 {
     public class Qualification : AggregateRoot<int>
     {
-    }
+        public int UserId { get; set; }
+        public int SerieId { get; set; }
+        public int Score { get; set; } // Puntuación del 1 al 10
+        public string? Review { get; set; } // Comentario opcional
 
     }
 }

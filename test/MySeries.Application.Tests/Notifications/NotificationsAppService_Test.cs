@@ -39,6 +39,7 @@ namespace MySeries.Notifications
 
             var usuario = new Usuario
             {
+                UserId = userId,
                 UserName = "UsuarioTest",
                 Password = "PasswordTest",
                 Email = "UsuarioMail@Example.com",
@@ -65,6 +66,7 @@ namespace MySeries.Notifications
             var message = "Test de Notificación";
             var usuario = new Usuario
             {
+                UserId = userId,
                 UserName = "UsuarioTest2",
                 Password = "PasswordTest2",
                 Email = "UsuarioTest2@Example.com",
