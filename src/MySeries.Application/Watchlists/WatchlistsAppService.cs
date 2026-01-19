@@ -119,19 +119,9 @@ namespace MySeries.Watchlists
             // Mapear las series a SerieDto
             return watchlist.SeriesList.Select(s => new SerieDto
             {
-                ImdbId = s.ImdbId,
                 Title = s.Title,
                 Year = s.Year,
-                Genre = s.Genre,
-                Plot = s.Plot,
-                Country = s.Country,
                 Poster = s.Poster,
-                ImdbRating = s.ImdbRating,
-                TotalSeasons = s.TotalSeasons,
-                Runtime = s.Runtime,
-                Actors = s.Actors,
-                Director = s.Director,
-                Writer = s.Writer
             }).ToList();
 
         }
