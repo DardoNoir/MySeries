@@ -67,7 +67,6 @@ namespace MySeries.Watchlists
 
         public async Task RemoveSeriesAsync(int seriesId, int userId)
         {
-            // 1. Verificar si el ID de usuario es válido
             if (userId <= 0)
             {
                 throw new BusinessException("Usuario no Autenticado.");
