@@ -6,6 +6,8 @@ using Volo.Abp.AutoMapper;
 using Volo.Abp.FeatureManagement;
 using Volo.Abp.Modularity;
 using Volo.Abp.TenantManagement;
+using Microsoft.Extensions.DependencyInjection;
+using MySeries.Notifications;
 
 namespace MySeries;
 
@@ -17,7 +19,8 @@ namespace MySeries;
     typeof(AbpIdentityApplicationModule),
     typeof(AbpAccountApplicationModule),
     typeof(AbpTenantManagementApplicationModule),
-    typeof(AbpSettingManagementApplicationModule)
+    typeof(AbpSettingManagementApplicationModule),
+    typeof(AbpAutoMapperModule)
     )]
 public class MySeriesApplicationModule : AbpModule
 {
@@ -27,5 +30,6 @@ public class MySeriesApplicationModule : AbpModule
         {
             options.AddMaps<MySeriesApplicationModule>();
         });
+        context.Services.AddTransient<INotificationsAppService, NotificationsAppService>();
     }
 }

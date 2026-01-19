@@ -6,8 +6,8 @@ namespace MySeries.Application.Contracts.OmdbService
 {
     public interface IOmdbSeriesService
     {
-        Task<serieDto> GetByImdbIdAsync(string imdbId);
-        Task<ICollection<serieDto>> SearchByTitleAsync(string title);
+        Task<SerieDto> GetByImdbIdAsync(string imdbId);
+        Task<ICollection<SerieDto>> SearchByTitleAsync(string title);
     }
 }
 
