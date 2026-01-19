@@ -9,14 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Monitoring\MonitoringAppService.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Monitoring\MonitoringAppService.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MySeries.Domain\MySeries.Domain.csproj" />
     <ProjectReference Include="..\MySeries.Application.Contracts\MySeries.Application.Contracts.csproj" />
   </ItemGroup>
