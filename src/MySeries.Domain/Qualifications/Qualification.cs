@@ -9,10 +9,8 @@ public class Qualification : AggregateRoot<int>
 
     protected Qualification()
     {
-        public int UserId { get; set; }
-        public int SerieId { get; set; }
-        public int Score { get; set; } // Puntuación del 1 al 10
-        public string? Review { get; set; } // Comentario opcional
+
+    }
 
     public Qualification(int userId, int serieId, int score, string? review)
     {
