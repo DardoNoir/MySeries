@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
-using MySeries.Application.Contracts;
+﻿using MySeries.Application.Contracts;
 using MySeries.SerieService;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
@@ -28,6 +29,7 @@ namespace MySeries.Series
         }
 
         // Busca series por título utilizando el servicio externo
+        [RemoteService(IsEnabled = false)]
         public async Task<ICollection<SerieDto>> SearchByTitleAsync(string title)
         {
             // Delegar la búsqueda al servicio de integración

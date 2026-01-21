@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MySeries.Application.Contracts\MySeries.Application.Contracts.csproj" />
+    <ProjectReference Include="..\MySeries.Application\MySeries.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

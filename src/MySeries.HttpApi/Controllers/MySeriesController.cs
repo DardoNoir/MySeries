@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySeries.Application.Contracts;
+using MySeries.Series;
 using MySeries.SerieService;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,17 +11,17 @@ namespace MySeries.Controllers
     [Route("api/app/serie")]
     public class SerieController : AbpController
     {
-        private readonly ISeriesAppService _seriesAppService;
+        private readonly SerieAppService _serieAppService;
 
-        public SerieController(ISeriesAppService seriesAppService)
+        public SerieController(SerieAppService serieAppService)
         {
-            _seriesAppService = seriesAppService;
+            _serieAppService = serieAppService;
         }
 
         [HttpGet("search-by-title")]
         public async Task<ICollection<SerieDto>> SearchByTitleAsync([FromQuery] string title)
         {
-            return await _seriesAppService.SearchByTitleAsync(title);
+            return await _serieAppService.SearchByTitleAsync(title);
         }
     }
 }
