@@ -1,0 +1,26 @@
+<div class = "series-container">
+    <h2>
+        Busqueda de Series
+    </h2>
+    <div class="search-box">
+    <label>Title</label>
+        <input [(ngModel)]="title" placeholder="e.g. Breaking Bad" />
+        <button (click)="search()">Search</button>
+    </div>
+
+    <div *ngIf="loading">Buscando Series...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+
+    <div class="series-grid">
+        <div class="serie-card" *ngFor="let serie of series">
+            <img
+                *ngIf="serie.poster"
+                [src]="serie.poster"
+                alt="poster"
+            />
+            <h3>{{serie.title}}</h3>
+            <p>Año: {{serie.year}}</p>
+        </div>
+    </div>
+
+</div>

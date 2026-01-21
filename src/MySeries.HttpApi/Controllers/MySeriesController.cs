@@ -1,14 +1,26 @@
-﻿using MySeries.Localization;
+﻿using Microsoft.AspNetCore.Mvc;
+using MySeries.Application.Contracts;
+using MySeries.SerieService;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Volo.Abp.AspNetCore.Mvc;
 
-namespace MySeries.Controllers;
-
-/* Inherit your controllers from this class.
- */
-public abstract class MySeriesController : AbpControllerBase
+namespace MySeries.Controllers
 {
-    protected MySeriesController()
+    [Route("api/app/serie")]
+    public class SerieController : AbpController
     {
-        LocalizationResource = typeof(MySeriesResource);
+        private readonly ISeriesAppService _seriesAppService;
+
+        public SerieController(ISeriesAppService seriesAppService)
+        {
+            _seriesAppService = seriesAppService;
+        }
+
+        [HttpGet("search-by-title")]
+        public async Task<ICollection<SerieDto>> SearchByTitleAsync([FromQuery] string title)
+        {
+            return await _seriesAppService.SearchByTitleAsync(title);
+        }
     }
 }
