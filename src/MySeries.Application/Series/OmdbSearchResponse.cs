@@ -22,3 +22,4 @@ namespace MySeries.Series
         public string Type { get; set; }
     }
 }
+

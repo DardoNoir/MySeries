@@ -11,11 +11,9 @@ namespace MySeries.Series
         public string? Plot { get; set; }
         public required string Year { get; set; } 
         public string? Country { get; set; }
-        public string? ImdbId { get; set; } // relation with OMDb
+        public string? ImdbId { get; set; } 
         public string? ImdbRating { get; set; }
-        public string? TotalSeasons { get; set; } // temporadas
-
-        // campos adicionales para cumplir con el punto 2
+        public string? TotalSeasons { get; set; } 
         public string? Poster { get; set; }     
         public string? Runtime { get; set; }    
         public string? Actors { get; set; }     
