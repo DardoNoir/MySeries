@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace MySeries.Migrations
 {
     [DbContext(typeof(MySeriesDbContext))]
-    [Migration("20260122215239_EntidadesDB")]
-    partial class EntidadesDB
+    [Migration("20260122222807_EntidadesDataBase")]
+    partial class EntidadesDataBase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
