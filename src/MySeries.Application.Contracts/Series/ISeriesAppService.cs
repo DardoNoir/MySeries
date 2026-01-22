@@ -8,7 +8,7 @@ namespace MySeries.Application.Contracts
 {
     public interface ISeriesAppService : ICrudAppService<SerieDto,int, PagedAndSortedResultRequestDto>
     {
-        Task<ICollection<SerieDto>> SearchByTitleAsync(string title);
+        Task<ICollection<SerieDto>> SearchByTitleAsync(string title, string? genre);
 
     }
 }

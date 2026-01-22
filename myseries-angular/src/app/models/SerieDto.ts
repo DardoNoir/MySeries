@@ -3,4 +3,5 @@ export interface SerieDto {
     title: string;
     year: string;
     poster?: string;
+    genre?: string;
 }

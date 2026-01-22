@@ -1,11 +1,14 @@
-<div class = "series-container">
-    <h2>
-        Busqueda de Series
-    </h2>
+<div class="series-container">
+    <h2>Busqueda de Series</h2>
+
     <div class="search-box">
-    <label>Title</label>
-        <input [(ngModel)]="title" placeholder="e.g. Breaking Bad" />
-        <button (click)="search()">Search</button>
+        <label>Title</label>
+        <input [(ngModel)]="Título" placeholder="Ej. Breaking Bad" />
+
+        <label>Genre (optional)</label>
+        <input [(ngModel)]="Género" placeholder="Comedy, Drama, Crime..." />
+
+        <button (click)="Buscar()">Search</button>
     </div>
 
     <div *ngIf="loading">Buscando Series...</div>
@@ -13,14 +16,11 @@
 
     <div class="series-grid">
         <div class="serie-card" *ngFor="let serie of series">
-            <img
-                *ngIf="serie.poster"
-                [src]="serie.poster"
-                alt="poster"
-            />
-            <h3>{{serie.title}}</h3>
-            <p>Año: {{serie.year}}</p>
+            <img *ngIf="serie.poster" [src]="serie.poster" alt="poster" />
+
+            <h3>{{ serie.title }}</h3>
+            <p>Año: {{ serie.year }}</p>
+            <p *ngIf="serie.genre">Género: {{ serie.genre }}</p>
         </div>
     </div>
-
 </div>

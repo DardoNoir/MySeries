@@ -6,16 +6,22 @@ import { Observable } from "rxjs";
 @Injectable({
     providedIn: 'root',
 })
-export class SerieService{
-    private baseUrl  = ''
+export class SerieService {
+    private baseUrl = '';
 
     constructor(private http: HttpClient) {}
 
-    searchSeries(title: string): Observable<SerieDto[]> {
+    searchSeries(title: string, genre?: string): Observable<SerieDto[]> {
+
+        let params = new HttpParams().set('title', title);
+
+        if (genre && genre.trim().length > 0) {
+            params = params.set('genre', genre);
+        }
+
         return this.http.get<SerieDto[]>(
             '/api/app/serie/search-by-title',
-            { params: { title } }
+            { params }
         );
     }
-
 }

@@ -9,6 +9,6 @@ namespace MySeries.Series
 {
     public interface ISeriesApiService
     {
-        Task<ICollection<SerieDto>> GetSeriesAsync(string title);
+        Task<ICollection<SerieDto>> GetSeriesAsync(string title, string? genre);
     }
 }

@@ -22,41 +22,59 @@ namespace MySeries.Series
         private static readonly string baseUrl = "http://www.omdbapi.com/";
 
         // Obtiene una colección de series filtradas por título
-        public async Task<ICollection<SerieDto>> GetSeriesAsync(string title)
+        public async Task<ICollection<SerieDto>> GetSeriesAsync(string title, string? genre)
         {
-            // Crear el cliente HTTP para realizar la petición
             using var client = new HttpClient();
 
-            // Construir la URL con parámetros de búsqueda
-            var url = $"{baseUrl}?s={title}&type=series&apikey={apiKey}";
+            // 1️⃣ Búsqueda por título
+            var searchUrl = $"{baseUrl}?s={title}&type=series&apikey={apiKey}";
+            var searchResponse = await client.GetAsync(searchUrl);
+            searchResponse.EnsureSuccessStatusCode();
 
-            // Ejecutar la petición GET a la API
-            var response = await client.GetAsync(url);
-            // Lanza excepción si la respuesta no es exitosa
-            response.EnsureSuccessStatusCode();
+            var searchJson = await searchResponse.Content.ReadAsStringAsync();
+            var searchResult = JsonConvert.DeserializeObject<OmdbSearchResponse>(searchJson);
 
-            // Leer el contenido de la respuesta como string
-            var json = await response.Content.ReadAsStringAsync();
-
-            // Deserializar el JSON a un objeto de dominio auxiliar
-            var omdbResponse = JsonConvert.DeserializeObject<OmdbSearchResponse>(json);
-
-            // Lista donde se almacenarán las series mapeadas
             var result = new List<SerieDto>();
 
-            // Recorrer los resultados de la API (si no hay resultados, se usa lista vacía)
-            foreach (var item in omdbResponse?.Search ?? [])
+            // Normalizamos el género buscado (si existe)
+            var genreFilter = genre?.Trim().ToLowerInvariant();
+
+            // 2️⃣ Para cada serie encontrada → pedir detalle
+            foreach (var item in searchResult?.Search ?? [])
             {
-                // Mapear cada item a un DTO de Serie
+                if (string.IsNullOrWhiteSpace(item.ImdbId))
+                    continue;
+
+                var detailUrl = $"{baseUrl}?i={item.ImdbId}&apikey={apiKey}";
+                var detailResponse = await client.GetAsync(detailUrl);
+
+                if (!detailResponse.IsSuccessStatusCode)
+                    continue;
+
+                var detailJson = await detailResponse.Content.ReadAsStringAsync();
+                var detail = JsonConvert.DeserializeObject<OmdbDetailResponse>(detailJson);
+
+                var serieGenre = detail?.Genre;
+
+                // 3️⃣ Filtro por género (si fue solicitado)
+                if (!string.IsNullOrEmpty(genreFilter))
+                {
+                    if (string.IsNullOrWhiteSpace(serieGenre) ||
+                    !serieGenre.ToLowerInvariant().Contains(genreFilter))
+                    {
+                        continue; // ❌ no coincide → no se agrega
+                    }
+                }
+
                 result.Add(new SerieDto
                 {
                     Title = item.Title,
                     Year = item.Year,
                     Poster = item.Poster,
+                    Genre = serieGenre
                 });
             }
 
-            // Devolver la colección de series
             return result;
         }
     }

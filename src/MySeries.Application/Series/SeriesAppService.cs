@@ -30,10 +30,10 @@ namespace MySeries.Series
 
         // Busca series por título utilizando el servicio externo
         [RemoteService(IsEnabled = false)]
-        public async Task<ICollection<SerieDto>> SearchByTitleAsync(string title)
+        public async Task<ICollection<SerieDto>> SearchByTitleAsync(string title, string? genre)
         {
             // Delegar la búsqueda al servicio de integración
-            return await _seriesApiService.GetSeriesAsync(title);
+            return await _seriesApiService.GetSeriesAsync(title, genre);
         }
     }
 }

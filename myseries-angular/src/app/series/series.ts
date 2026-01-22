@@ -15,24 +15,24 @@ import { SerieService } from '../services/serie.service';
 
 export class SeriesComponent {
   title = '';
+  genre = ''; // 👈 nuevo
   loading = false;
-  series: SerieDto[]=[];
+  series: SerieDto[] = [];
   error?: string;
 
   constructor(private serieService: SerieService) {}
 
-
-  search(): void{
-    if(!this.title.trim()){
+  search(): void {
+    if (!this.title.trim()) {
       this.error = 'Enter a title';
       return;
     }
 
     this.loading = true;
     this.series = [];
-    this.error = undefined
+    this.error = undefined;
 
-    this.serieService.searchSeries(this.title).subscribe({
+    this.serieService.searchSeries(this.title, this.genre).subscribe({
       next: (result) => {
         this.series = result;
         this.loading = false;
@@ -43,6 +43,7 @@ export class SeriesComponent {
         this.loading = false;
       }
     });
-    console.log('Searching', this.title);
+
+    console.log('Searching', this.title, this.genre);
   }
 }

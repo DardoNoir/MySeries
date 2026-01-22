@@ -19,9 +19,9 @@ namespace MySeries.Controllers
         }
 
         [HttpGet("search-by-title")]
-        public async Task<ICollection<SerieDto>> SearchByTitleAsync([FromQuery] string title)
+        public async Task<ICollection<SerieDto>> SearchByTitleAsync([FromQuery] string title, [FromQuery] string? genre)
         {
-            return await _serieAppService.SearchByTitleAsync(title);
+            return await _serieAppService.SearchByTitleAsync(title, genre);
         }
     }
 }

@@ -11,13 +11,13 @@ namespace MySeries.Monitoring
         public int TotalCalls { get; set; }
         public double AverageResponseTime { get; set; }
         public int ErrorCount { get; set; }
-        public List<EndpointStatDto> TopEndpoints { get; set; }
+        public List<EndpointStatDto>? TopEndpoints { get; set; }
         public int OmdbApiConsumptions { get; set; }
     }
 
     public class EndpointStatDto
     {
-        public string Method { get; set; }
+        public string? Method { get; set; }
         public int Count { get; set; }
     }
 }
