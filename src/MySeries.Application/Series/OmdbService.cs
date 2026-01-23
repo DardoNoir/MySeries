@@ -54,13 +54,11 @@ namespace MySeries.Series
                 var detailJson = await detailResponse.Content.ReadAsStringAsync();
                 var detail = JsonConvert.DeserializeObject<OmdbDetailResponse>(detailJson);
 
-                var serieGenre = detail?.Genre;
-
                 // 3️⃣ Filtro por género (si fue solicitado)
                 if (!string.IsNullOrEmpty(genreFilter))
                 {
-                    if (string.IsNullOrWhiteSpace(serieGenre) ||
-                    !serieGenre.ToLowerInvariant().Contains(genreFilter))
+                    if (string.IsNullOrWhiteSpace(detail?.Genre) ||
+                    !(detail.Genre).ToLowerInvariant().Contains(genreFilter))
                     {
                         continue; // ❌ no coincide → no se agrega
                     }
@@ -71,7 +69,16 @@ namespace MySeries.Series
                     Title = item.Title,
                     Year = item.Year,
                     Poster = item.Poster,
-                    Genre = serieGenre
+                    Genre = detail?.Genre,
+                    Plot = detail?.Plot,
+                    Country = detail?.Country,
+                    ImdbId = item.ImdbId,
+                    ImdbRating = detail?.ImdbRating,
+                    TotalSeasons = detail?.TotalSeasons,
+                    Runtime = detail?.Runtime,
+                    Actors = detail?.Actors,
+                    Director = detail?.Director,
+                    Writer = detail?.Writer
                 });
             }
 

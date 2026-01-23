@@ -127,6 +127,7 @@ namespace MySeries.Watchlists
                 Title = s.Title,
                 Year = s.Year,
                 Poster = s.Poster,
+                ImdbId = s.ImdbId,
             }).ToList();
         }
     }

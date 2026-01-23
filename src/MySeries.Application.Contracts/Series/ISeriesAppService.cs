@@ -10,6 +10,8 @@ namespace MySeries.Application.Contracts
     {
         Task<ICollection<SerieDto>> SearchByTitleAsync(string title, string? genre);
 
+        Task<SerieDto> SaveAsync(SerieDto input);
+
     }
 }
 
