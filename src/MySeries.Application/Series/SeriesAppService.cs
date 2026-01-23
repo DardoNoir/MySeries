@@ -71,5 +71,21 @@ namespace MySeries.Series
 
             return ObjectMapper.Map<Serie, SerieDto>(serie);
         }
+
+
+        public async Task<SerieDto> GetOrCreateFromApiAsync(string imdbId)
+        {
+            var existing = await Repository.FirstOrDefaultAsync(s => s.ImdbId == imdbId);
+            if (existing != null)
+                return ObjectMapper.Map<Serie, SerieDto>(existing);
+
+            var serieFromApi = await _seriesApiService.GetSerieByImdbIdAsync(imdbId);
+            if (serieFromApi == null)
+            throw new BusinessException("SerieNotFoundInApi");
+
+            var entity = ObjectMapper.Map<SerieDto, Serie>(serieFromApi);
+            await Repository.InsertAsync(entity, autoSave: true);
+            return ObjectMapper.Map<Serie, SerieDto>(entity);
+        }
     }
 }

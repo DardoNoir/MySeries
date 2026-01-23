@@ -84,5 +84,40 @@ namespace MySeries.Series
 
             return result;
         }
+
+
+        public async Task<SerieDto?> GetSerieByImdbIdAsync(string imdbId)
+        {
+            using var client = new HttpClient();
+
+            var url = $"{baseUrl}?i={imdbId}&type=series&apikey={apiKey}";
+            var response = await client.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var json = await response.Content.ReadAsStringAsync();
+            var detail = JsonConvert.DeserializeObject<OmdbDetailResponse>(json);
+
+            if (detail == null)
+                return null;
+            
+            return new SerieDto
+            {
+                ImdbId = imdbId,
+                Title = detail.Title!,
+                Genre = detail.Genre,
+                Year = detail.Year!,
+                Plot = detail.Plot,
+                Country = detail.Country,
+                ImdbRating = detail.ImdbRating,
+                TotalSeasons = detail.TotalSeasons,
+                Runtime = detail.Runtime,
+                Actors = detail.Actors,
+                Director = detail.Director,
+                Writer = detail.Writer,
+                Poster = detail.Poster
+            };
+        }
     }
 }

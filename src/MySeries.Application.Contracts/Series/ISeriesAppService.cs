@@ -12,6 +12,9 @@ namespace MySeries.Application.Contracts
 
         Task<SerieDto> SaveAsync(SerieDto input);
 
+        Task<SerieDto> GetOrCreateFromApiAsync(string imdbId);
+
+
     }
 }
 

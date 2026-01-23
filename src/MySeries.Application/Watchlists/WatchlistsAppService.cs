@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration.UserSecrets;
+using MySeries.Application.Contracts;
 using MySeries.Series;
 using MySeries.SerieService;
 using MySeries.WatchLists;
@@ -23,57 +24,50 @@ namespace MySeries.Watchlists
         private readonly IRepository<WatchList, int> _watchlistRepository;
         // Repositorio de Series
         private readonly IRepository<Serie, int> _serieRepository;
+        private readonly ISeriesAppService _serieAppService;
+
 
         // Constructor con inyección de dependencias
         public WatchlistsAppService(
             IRepository<WatchList, int> watchlistRepository,
-            IRepository<Serie, int> serieRepository
+            IRepository<Serie, int> serieRepository,
+            ISeriesAppService serieAppService
         )
         {
             _watchlistRepository = watchlistRepository;
             _serieRepository = serieRepository;
+            _serieAppService = serieAppService;
         }
 
         // Agrega una serie a la watchlist del usuario
-        public async Task AddSeriesAsync(int seriesId, int userId)
+        public async Task AddSeriesFromApiAsync(string imdbId, int userId)
         {
-            // Validar que el usuario esté autenticado
             if (userId <= 0)
-                throw new BusinessException("Usuario no Autenticado.");
+                throw new BusinessException("UsuarioNoAutenticado");
 
-            // Obtener la serie desde el repositorio
-            var serie = await _serieRepository.GetAsync(seriesId);
-            if (serie == null)
-                throw new BusinessException("Serie no encontrada.");
+            var serie = await _serieAppService.GetOrCreateFromApiAsync(imdbId);
 
-            // Obtener la watchlist del usuario con la lista de series cargada
             var watchlist = await (await _watchlistRepository
-                    .WithDetailsAsync(w => w.SeriesList))
+                .WithDetailsAsync(w => w.SeriesList))
                 .FirstOrDefaultAsync(w => w.UserId == userId);
 
-            // Si no existe watchlist, crear una nueva
             if (watchlist == null)
             {
-                watchlist = new WatchList(userId)
-                {
-                    SeriesList = new List<Serie>()
-                };
-
-                watchlist.SeriesList.Add(serie);
+                watchlist = new WatchList(userId);
+                watchlist.SeriesList.Add(
+                    await _serieRepository.GetAsync(serie.Id));
                 await _watchlistRepository.InsertAsync(watchlist);
                 return;
             }
 
-            // Inicializar la lista si es nula
-            watchlist.SeriesList ??= new List<Serie>();
-
-            // Evitar duplicados
-            if (!watchlist.SeriesList.Any(s => s.Id == seriesId))
+            if (!watchlist.SeriesList.Any(s => s.ImdbId == imdbId))
             {
-                watchlist.SeriesList.Add(serie);
+                var entity = await _serieRepository.GetAsync(serie.Id);
+                watchlist.SeriesList.Add(entity);
                 await _watchlistRepository.UpdateAsync(watchlist);
             }
         }
+
 
         // Elimina una serie de la watchlist del usuario
         public async Task RemoveSeriesAsync(int seriesId, int userId)

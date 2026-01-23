@@ -10,5 +10,8 @@ namespace MySeries.Series
     public interface ISeriesApiService
     {
         Task<ICollection<SerieDto>> GetSeriesAsync(string title, string? genre);
+
+        Task<SerieDto?> GetSerieByImdbIdAsync(string imdbId);
+
     }
 }
