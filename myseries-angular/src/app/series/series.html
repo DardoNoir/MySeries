@@ -1,26 +1,25 @@
 <div class="series-container">
-    <h2>Busqueda de Series</h2>
+  <h2>Búsqueda de Series</h2>
 
-    <div class="search-box">
-        <label>Title</label>
-        <input [(ngModel)]="Título" placeholder="Ej. Breaking Bad" />
+  <div class="search-box">
+    <label>Título</label>
+    <input [(ngModel)]="title" placeholder="Ej. Breaking Bad" />
 
-        <label>Genre (optional)</label>
-        <input [(ngModel)]="Género" placeholder="Comedy, Drama, Crime..." />
+    <label>Género (opcional)</label>
+    <input [(ngModel)]="genre" placeholder="Comedy, Drama, Crime..." />
 
-        <button (click)="Buscar()">Search</button>
+    <button (click)="search()">Search</button>
+  </div>
+
+  <div *ngIf="loading">Buscando Series...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="series-grid">
+    <div class="serie-card" *ngFor="let serie of series">
+      <img *ngIf="serie.poster" [src]="serie.poster" alt="poster" />
+
+      <h3>{{ serie.title }}</h3>
+      <p>Año: {{ serie.year }}</p>
     </div>
-
-    <div *ngIf="loading">Buscando Series...</div>
-    <div *ngIf="error" class="error">{{ error }}</div>
-
-    <div class="series-grid">
-        <div class="serie-card" *ngFor="let serie of series">
-            <img *ngIf="serie.poster" [src]="serie.poster" alt="poster" />
-
-            <h3>{{ serie.title }}</h3>
-            <p>Año: {{ serie.year }}</p>
-            <p *ngIf="serie.genre">Género: {{ serie.genre }}</p>
-        </div>
-    </div>
+  </div>
 </div>

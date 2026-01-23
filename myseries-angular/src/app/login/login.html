@@ -1,0 +1,14 @@
+<div class="login-container">
+  <h1>My Series</h1>
+
+  <input [(ngModel)]="userName" placeholder="Usuario" />
+  <input [(ngModel)]="password" type="password" placeholder="Contraseña" />
+
+  <button (click)="login()">Ingresar</button>
+
+  <button *ngIf="creatingUser" (click)="createUser()">
+    Crear usuario
+  </button>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+</div>

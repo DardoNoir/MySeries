@@ -16,7 +16,7 @@ namespace MySeries.Application.Usuarios
         }
 
         // 1️⃣ Crear y guardar usuario
-        public async Task<UsuarioDto> crearUsuarioAsync(CreateUsuarioDto input)
+        public async Task<UsuarioDto> CrearUsuarioAsync(CreateUsuarioDto input)
         {
             // Validaciones básicas
             if (string.IsNullOrWhiteSpace(input.UserName))

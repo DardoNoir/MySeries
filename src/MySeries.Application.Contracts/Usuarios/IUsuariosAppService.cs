@@ -9,7 +9,7 @@ namespace MySeries.Usuarios
 {
     public interface IUsuariosAppService: IApplicationService
     {
-        Task<UsuarioDto> crearUsuarioAsync(CreateUsuarioDto input);        
+        Task<UsuarioDto> CrearUsuarioAsync(CreateUsuarioDto input);        
         Task<UsuarioDto> GetUsuarioAsync(string UserName, string Password);
     }
 }
