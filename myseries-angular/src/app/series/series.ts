@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SerieDto } from '../models/SerieDto';
 import { SerieService } from '../services/serie.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-series',      
@@ -15,12 +16,14 @@ import { SerieService } from '../services/serie.service';
 
 export class SeriesComponent {
   title = '';
-  genre = ''; // 👈 nuevo
+  genre = ''; 
   loading = false;
   series: SerieDto[] = [];
   error?: string;
 
-  constructor(private serieService: SerieService) {}
+  constructor(private serieService: SerieService,
+    private router: Router
+  ) {}
 
   search(): void {
     if (!this.title.trim()) {
@@ -45,5 +48,9 @@ export class SeriesComponent {
     });
 
     console.log('Searching', this.title, this.genre);
+  }
+
+  goBack(): void {
+    this.router.navigateByUrl('/menu');
   }
 }
