@@ -11,7 +11,6 @@ using MySeries.Series;
 using MySeries.Watchlists;
 using MySeries.Qualifications;
 using MySeries.Notifications;
-using MySeries.Watchlists;
 using MySeries.Application.Contracts;
 
 namespace MySeries;
