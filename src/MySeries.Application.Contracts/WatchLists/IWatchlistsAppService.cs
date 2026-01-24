@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Application.Services;
 
-namespace MySeries.WatchLists
+namespace MySeries.Watchlists
 {
     public interface IWatchlistsAppService : IApplicationService
     {
