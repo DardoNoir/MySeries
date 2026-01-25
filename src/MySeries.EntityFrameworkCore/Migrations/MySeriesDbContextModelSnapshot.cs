@@ -126,8 +126,8 @@ namespace MySeries.Migrations
 
                     b.Property<string>("Year")
                         .IsRequired()
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
@@ -169,6 +169,9 @@ namespace MySeries.Migrations
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
+
+                    b.Property<int>("Rol")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .IsRequired()

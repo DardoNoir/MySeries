@@ -99,7 +99,7 @@ public class MySeriesDbContext :
             b.ConfigureByConvention();
             b.Property(x => x.Title).IsRequired().HasMaxLength(256);
             b.Property(x => x.Genre).IsRequired().HasMaxLength(128);
-            b.Property(x => x.Year).IsRequired().HasMaxLength(4);
+            b.Property(x => x.Year).IsRequired().HasMaxLength(20);
         });
 
         // --- Configuración de WatchList  ---

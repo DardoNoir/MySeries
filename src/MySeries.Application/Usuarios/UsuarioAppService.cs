@@ -1,6 +1,7 @@
 using MySeries.Usuarios;
 using System;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
@@ -16,6 +17,7 @@ namespace MySeries.Application.Usuarios
         }
 
         // 1️⃣ Crear y guardar usuario
+        [RemoteService(IsEnabled = false)]
         public async Task<UsuarioDto> CrearUsuarioAsync(CreateUsuarioDto input)
         {
             // Validaciones básicas
@@ -38,9 +40,10 @@ namespace MySeries.Application.Usuarios
             {
                 UserName = input.UserName,
                 Email = input.Email,
-                Password = input.Password, // ⚠️ luego lo hasheamos
+                Password = input.Password,
                 NotificationsByEmail = input.NotificationsByEmail,
-                NotificationsByApp = input.NotificationsByApp
+                NotificationsByApp = input.NotificationsByApp,
+                Rol = RolUsuario.User 
             };
 
             // Guardar
@@ -76,7 +79,8 @@ namespace MySeries.Application.Usuarios
                 UserName = user.UserName,
                 Email = user.Email,
                 NotificationsByEmail = user.NotificationsByEmail,
-                NotificationsByApp = user.NotificationsByApp
+                NotificationsByApp = user.NotificationsByApp,
+                Rol = (RolUsuarioDto)user.Rol
             };
         }
     }

@@ -7,7 +7,6 @@ namespace MySeries.Usuarios
         public string UserName { get; set; } = null!;
         public string? Email { get; set; }
         public string Password { get; set; } = null!;
-
         public bool NotificationsByEmail { get; set; }
         public bool NotificationsByApp { get; set; }
     }
@@ -16,6 +15,7 @@ namespace MySeries.Usuarios
     {
         public string UserName { get; set; } = null!;
         public string? Email { get; set; }
+        public RolUsuarioDto Rol { get; set; }
 
         public bool NotificationsByEmail { get; set; }
         public bool NotificationsByApp { get; set; }
