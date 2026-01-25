@@ -1,0 +1,23 @@
+<div class="login-container">
+  <h2>Crear usuario</h2>
+
+  <input [value]="userName" disabled />
+  <input type="password" [value]="password" disabled />
+
+  <input [(ngModel)]="email" placeholder="Email" />
+
+  <label>
+    <input type="checkbox" [(ngModel)]="notificationsByEmail" />
+    Notificaciones por Email
+  </label>
+
+  <label>
+    <input type="checkbox" [(ngModel)]="notificationsByApp" />
+    Notificaciones por App
+  </label>
+
+  <button (click)="crearUsuario()">Crear usuario</button>
+  <button (click)="goBack()">Volver</button>
+
+  <div class="error" *ngIf="error">{{ error }}</div>
+</div>

@@ -23,7 +23,7 @@ export class AuthService {
     );
   }
 
-  // 👤 CREAR USUARIO (POST /crear-usuario)
+  // 👤 CREAR USUARIO (GET /crear-usuario)
  createUser(input: CreateUsuarioDto): Observable<UsuarioDto> {
   const params = new HttpParams()
     .set('userName', input.userName)
@@ -46,4 +46,10 @@ export class AuthService {
   isLogged(): boolean {
     return !!localStorage.getItem('user');
   }
+
+
+  setUser(user: UsuarioDto) {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
 }

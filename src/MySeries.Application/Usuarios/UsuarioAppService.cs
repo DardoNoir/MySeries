@@ -64,14 +64,14 @@ namespace MySeries.Application.Usuarios
         public async Task<UsuarioDto> GetUsuarioAsync(string userName, string password)
         {
             if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
-                throw new Exception("Credenciales inválidas");
+                throw new BusinessException("Credenciales inválidas");
 
             var user = await _userRepository.FirstOrDefaultAsync(
                 u => u.UserName == userName && u.Password == password
             );
 
             if (user == null)
-                throw new Exception("Usuario o contraseña incorrectos");
+                throw new BusinessException("Usuario o contraseña incorrectos");
 
             return new UsuarioDto
             {

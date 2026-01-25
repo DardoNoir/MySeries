@@ -23,34 +23,27 @@ export class LoginComponent {
   ) {}
 
   login() {
-  this.error = undefined;
+    this.error = undefined;
 
-  this.auth.login(this.userName, this.password).subscribe({
-    next: () => this.router.navigateByUrl('/menu'),
-    error: () => {
-      this.error = 'Usuario o contraseña incorrectos';
-      this.creatingUser = true;
-    }
-  });
+    this.auth.login(this.userName, this.password).subscribe({
+      next: () => this.router.navigateByUrl('/menu'),
+      error: () => {
+        this.error = 'Usuario no encontrado';
+        this.creatingUser = true;
+      }
+    });
   }
 
-  createUser() {
-  this.error = undefined;
-
-  this.auth.createUser({
-    userName: this.userName,
-    password: this.password,
-    email: undefined,
-    notificationsByEmail: false,
-    notificationsByApp: true
-  }).subscribe({
-    next: () => this.login(),
-    error: err => {
-      console.error('Error backend:', err);
-      this.error = err.error?.message || 'Error al crear usuario';
-    }
-  });
-}
-
+  goToCreateUser() {
+    this.router.navigateByUrl('/register', {
+      state: {
+        userName: this.userName,
+        password: this.password
+      }
+    });
+  }
 
 }
+
+
+
