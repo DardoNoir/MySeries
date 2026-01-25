@@ -11,6 +11,7 @@ namespace MySeries.Usuarios
         public required string UserName { get; set; }
         public string? Email { get; set; }
         public required string Password { get; set; }
+        public RolUsuario Rol { get; set; }
 
         public bool NotificationsByEmail { get; set; }
         public bool NotificationsByApp { get; set; }

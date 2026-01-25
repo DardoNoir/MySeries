@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MySeries.Migrations
 {
     /// <inheritdoc />
-    public partial class ModificandoEntidades : Migration
+    public partial class Entidades : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -490,6 +490,7 @@ namespace MySeries.Migrations
                     UserName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    Rol = table.Column<int>(type: "int", nullable: false),
                     NotificationsByEmail = table.Column<bool>(type: "bit", nullable: false),
                     NotificationsByApp = table.Column<bool>(type: "bit", nullable: false),
                     ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -842,7 +843,7 @@ namespace MySeries.Migrations
                     Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     Genre = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
                     Plot = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Year = table.Column<string>(type: "nvarchar(4)", maxLength: 4, nullable: false),
+                    Year = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImdbId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImdbRating = table.Column<string>(type: "nvarchar(max)", nullable: true),

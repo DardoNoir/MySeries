@@ -11,6 +11,8 @@
     <button (click)="search()">Search</button>
   </div>
 
+  <button (click)="goBack()">Volver al Menú</button>
+
   <div *ngIf="loading">Buscando Series...</div>
   <div *ngIf="error" class="error">{{ error }}</div>
 
@@ -20,6 +22,7 @@
 
       <h3>{{ serie.title }}</h3>
       <p>Año: {{ serie.year }}</p>
+      <p>Género: {{ serie.genre }}</p>
     </div>
   </div>
 </div>
