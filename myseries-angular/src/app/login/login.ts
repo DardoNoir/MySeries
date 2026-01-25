@@ -35,16 +35,22 @@ export class LoginComponent {
   }
 
   createUser() {
-    this.auth.createUser({
-      userName: this.userName,
-      password: this.password,
-      email: undefined,
-      notificationsByEmail: false,
-      notificationsByApp: true
-    }).subscribe({
-      next: () => this.login(),
-      error: err => this.error = err.error?.error?.message
-    });
-  }
+  this.error = undefined;
+
+  this.auth.createUser({
+    userName: this.userName,
+    password: this.password,
+    email: undefined,
+    notificationsByEmail: false,
+    notificationsByApp: true
+  }).subscribe({
+    next: () => this.login(),
+    error: err => {
+      console.error('Error backend:', err);
+      this.error = err.error?.message || 'Error al crear usuario';
+    }
+  });
+}
+
 
 }

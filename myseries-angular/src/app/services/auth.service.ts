@@ -24,12 +24,20 @@ export class AuthService {
   }
 
   // 👤 CREAR USUARIO (POST /crear-usuario)
-  createUser(input: CreateUsuarioDto): Observable<UsuarioDto> {
-    return this.http.post<UsuarioDto>(
-      `${this.baseUrl}/crear-usuario`,
-      input
-    );
-  }
+ createUser(input: CreateUsuarioDto): Observable<UsuarioDto> {
+  const params = new HttpParams()
+    .set('userName', input.userName)
+    .set('password', input.password)
+    .set('email', input.email ?? '')
+    .set('notificationsByEmail', input.notificationsByEmail)
+    .set('notificationsByApp', input.notificationsByApp);
+
+  return this.http.get<UsuarioDto>(
+    `${this.baseUrl}/crear-usuario`,
+    { params }
+  );
+}
+
 
   logout(): void {
     localStorage.removeItem('user');
