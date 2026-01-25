@@ -11,7 +11,7 @@ using MySeries.Series;
 using MySeries.Watchlists;
 using MySeries.Qualifications;
 using MySeries.Notifications;
-using MySeries.WatchLists;
+using MySeries.Application.Contracts;
 
 namespace MySeries;
 
@@ -35,8 +35,8 @@ public class MySeriesApplicationModule : AbpModule
         });
 
         context.Services.AddTransient<ISeriesApiService, OmdbService>();
-        context.Services.AddTransient<IWatchlistsAppService, WatchlistsAppService>();
-        context.Services.AddTransient<IQualificationsAppService, QualificationsAppService>();
-        context.Services.AddTransient<INotificationsAppService, NotificationsAppService>();
+        //  context.Services.AddTransient<IWatchlistsAppService, WatchlistsAppService>();
+        //  context.Services.AddTransient<IQualificationsAppService, QualificationsAppService>();
+        //  context.Services.AddTransient<INotificationsAppService, NotificationsAppService>();
     }
 }
