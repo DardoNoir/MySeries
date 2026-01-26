@@ -105,10 +105,11 @@ namespace MySeries.Watchlists
                 throw new BusinessException("UsuarioNoAutenticado");
 
             // 2️⃣ Obtener la watchlist con las series asociadas
-            var watchlist = await (await _watchlistRepository
-                .WithDetailsAsync(
-                    w => w.WatchListSeries,
-                    w => w.WatchListSeries.Select(ws => ws.Serie)))
+            var queryable = await _watchlistRepository.GetQueryableAsync();
+
+            var watchlist = await queryable
+                .Include(w => w.WatchListSeries)
+                .ThenInclude(ws => ws.Serie)
                 .FirstOrDefaultAsync(w => w.UserId == userId);
 
             if (watchlist == null || !watchlist.WatchListSeries.Any())
