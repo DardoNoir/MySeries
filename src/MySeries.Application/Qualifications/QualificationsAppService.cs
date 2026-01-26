@@ -30,7 +30,7 @@ namespace MySeries.Qualifications
 
         // Calificar una serie
 
-
+        [RemoteService(IsEnabled = false)]
         public async Task QualificationsSeriesAsync(int userId, int serieId, int Score, string? Review)
         {
             // Verificar que esté autenticado
@@ -77,6 +77,7 @@ namespace MySeries.Qualifications
         }
 
         // Modificar una calificación existente
+        [RemoteService(IsEnabled = false)]
         public async Task ModifyQualificationAsync(int userId, int serieId, int NewScore, string? NewReview)
         {
             // Verificar que esté autenticado

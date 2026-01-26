@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MySeries.Application.Contracts;
 using MySeries.Application.Usuarios;
+using MySeries.Notifications;
+using MySeries.Qualifications;
 using MySeries.Series;
 using MySeries.SerieService;
 using MySeries.Usuarios;
+using MySeries.Watchlists;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.AspNetCore.Mvc;
@@ -59,4 +62,92 @@ namespace MySeries.Controllers
         }
     }
 
+
+    [Route("api/app/notifications")]
+    public class NotificationsController : AbpController
+    {
+        private readonly NotificationsAppService _notificationsAppService;
+
+        public NotificationsController(NotificationsAppService notificationsAppService)
+        {
+                _notificationsAppService = notificationsAppService;
+        }
+
+        [HttpGet("send-notification")]
+        public async Task SendNotificationAsync([FromQuery] int userId, [FromQuery] string message)
+        {
+            await _notificationsAppService.SendNotificationAsync(userId, message);
+        }
+
+        [HttpGet("notify-by-email")]
+        public async Task NotifyByEmailAsync([FromQuery] int userId, [FromQuery] string message)
+        {
+            await _notificationsAppService.NotifyByEmailAsync(userId, message);
+        }
+
+        [HttpGet("mark-readen")]
+        public async Task MarkReadenAsync([FromQuery] int notificationId)
+        {
+            await _notificationsAppService.MarkReadenAsync(notificationId);
+        }
+    }
+
+    [Route("api/app/qualifications")]
+    public class QualificationsController : AbpController
+    {
+        private readonly QualificationsAppService _qualificationsAppService;
+        public QualificationsController(QualificationsAppService qualificationsAppService)
+        {
+            _qualificationsAppService = qualificationsAppService;
+        }
+
+        [HttpGet("qualifications-series")]
+        public async Task QualificationsSeriesAsync(
+            [FromQuery] int userId,
+            [FromQuery] int serieId,
+            [FromQuery] int score,
+            [FromQuery] string? review)
+        {
+            await _qualificationsAppService.QualificationsSeriesAsync(
+                userId,
+                serieId,
+                score,
+                review
+            );
+        }
+
+
+        [HttpGet("modify-qualification")]
+        public async Task ModifyQualificationAsync(
+            [FromQuery] int userId,
+            [FromQuery] int serieId,
+            [FromQuery] int newScore,
+            [FromQuery] string? newReview)
+        {
+            await _qualificationsAppService.ModifyQualificationAsync(
+                userId,
+                serieId,
+                newScore,
+                newReview
+            );
+        }
+    }
+
+
+    [Route("api/app/watchlists")]
+    public class WatchlistsController : AbpController
+    {
+        private readonly WatchlistsAppService _watchlistsAppService;
+
+        public WatchlistsController(WatchlistsAppService watchlistsAppService)
+        {
+            _watchlistsAppService = watchlistsAppService;
+        }
+
+        [HttpGet("series-from-api")]
+        public async Task AddSeriesFromApiAsync([FromQuery] string imdbId, [FromQuery] int userId)
+        {
+            await _watchlistsAppService.AddSeriesFromApiAsync(imdbId, userId);
+        }
+    }
 }

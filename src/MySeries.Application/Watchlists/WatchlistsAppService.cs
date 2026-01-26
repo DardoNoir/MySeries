@@ -1,18 +1,13 @@
-﻿using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration.UserSecrets;
+﻿using Microsoft.EntityFrameworkCore;
 using MySeries.Series;
 using MySeries.SerieService;
 using MySeries.Watchlists;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
-using Volo.Abp.Users;
 
 namespace MySeries.Watchlists
 {
@@ -20,118 +15,122 @@ namespace MySeries.Watchlists
     {
         private readonly IRepository<WatchList, int> _watchlistRepository;
         private readonly IRepository<Serie, int> _serieRepository;
+        private readonly IRepository<WatchListSerie> _watchListSerieRepository;
         private readonly SerieAppService _serieAppService;
 
-
-        public WatchlistsAppService(IRepository<WatchList, int> watchlistRepository,
+        public WatchlistsAppService(
+            IRepository<WatchList, int> watchlistRepository,
             IRepository<Serie, int> serieRepository,
+            IRepository<WatchListSerie> watchListSerieRepository,
             SerieAppService serieAppService)
         {
             _watchlistRepository = watchlistRepository;
             _serieRepository = serieRepository;
+            _watchListSerieRepository = watchListSerieRepository;
             _serieAppService = serieAppService;
         }
 
-        //Agregar una serie a la watchlist del usuario actual
+        // Agregar una serie (desde la API) a la watchlist del usuario
+        [RemoteService(IsEnabled = false)]
         public async Task AddSeriesFromApiAsync(string imdbId, int userId)
         {
+            // 1️⃣ Verificar que el usuario esté autenticado
             if (userId <= 0)
                 throw new BusinessException("UsuarioNoAutenticado");
 
-            var serie = await _serieAppService.GetOrCreateFromApiAsync(imdbId);
+            // 2️⃣ Obtener o crear la serie desde la API OMDb
+            var serieDto = await _serieAppService.GetOrCreateFromApiAsync(imdbId);
 
+            // 3️⃣ Obtener la entidad Serie persistida
+            var serieEntity = await _serieRepository.GetAsync(s => s.ImdbId == imdbId);
+
+            // 4️⃣ Obtener la watchlist del usuario incluyendo sus series
             var watchlist = await (await _watchlistRepository
-                .WithDetailsAsync(w => w.SeriesList))
+                .WithDetailsAsync(w => w.Series))
                 .FirstOrDefaultAsync(w => w.UserId == userId);
 
+            // 5️⃣ Si el usuario no tiene watchlist, crearla
             if (watchlist == null)
             {
                 watchlist = new WatchList(userId);
-                watchlist.SeriesList.Add(
-                    await _serieRepository.GetAsync(serie.Id));
-                await _watchlistRepository.InsertAsync(watchlist);
-                return;
+                await _watchlistRepository.InsertAsync(watchlist, autoSave: true);
             }
 
-            if (!watchlist.SeriesList.Any(s => s.ImdbId == imdbId))
-            {
-                var entity = await _serieRepository.GetAsync(serie.Id);
-                watchlist.SeriesList.Add(entity);
-                await _watchlistRepository.UpdateAsync(watchlist);
-            }
+            // 6️⃣ Verificar si la serie ya está asociada a la watchlist
+            var alreadyAdded = await _watchListSerieRepository.AnyAsync(
+                x => x.WatchListId == watchlist.Id && x.SerieId == serieEntity.Id);
+
+            if (alreadyAdded)
+                return; // La serie ya está en la watchlist → no hacer nada
+
+            // 7️⃣ Crear la relación WatchList ↔ Serie (tabla intermedia)
+            var relation = new WatchListSerie(
+                watchlist.Id,
+                serieEntity.Id
+            );
+
+            await _watchListSerieRepository.InsertAsync(relation);
         }
 
-
+        // Eliminar una serie de la watchlist del usuario
         public async Task RemoveSeriesAsync(int seriesId, int userId)
         {
-            // 1. Verificar si el ID de usuario es válido
+            // 1️⃣ Verificar que el usuario esté autenticado
             if (userId <= 0)
-            {
-                throw new BusinessException("Usuario no Autenticado.");
-            }
+                throw new BusinessException("UsuarioNoAutenticado");
 
-            // 2. Obtener la watchlist INCLUYENDO la colección de series
-            // Usamos WithDetailsAsync para cargar SeriesList de forma ansiosa (Eager Loading)
-            var watchlist = await (await _watchlistRepository.WithDetailsAsync(w => w.SeriesList))
+            // 2️⃣ Obtener la watchlist del usuario
+            var watchlist = await _watchlistRepository
                 .FirstOrDefaultAsync(w => w.UserId == userId);
 
             if (watchlist == null)
-            {
-                throw new BusinessException("Lista de seguimiento no encontrada.");
-            }
+                throw new BusinessException("ListaDeSeguimientoNoEncontrada");
 
-            // 3. Buscar la serie dentro de la lista cargada
-            var serie = watchlist.SeriesList.FirstOrDefault(s => s.Id == seriesId);
+            // 3️⃣ Buscar la relación WatchListSerie
+            var relation = await _watchListSerieRepository.FirstOrDefaultAsync(
+                x => x.WatchListId == watchlist.Id && x.SerieId == seriesId);
 
-            if (serie == null)
-            {
-                throw new BusinessException("Serie no encontrada en la lista de seguimiento.");
-            }
+            if (relation == null)
+                throw new BusinessException("SerieNoEncontradaEnLaWatchlist");
 
-            // 4. Eliminar la serie de la colección y actualizar
-            watchlist.SeriesList.Remove(serie);
-
-            // ABP se encargará de actualizar la relación en la base de datos
-            await _watchlistRepository.UpdateAsync(watchlist);
+            // 4️⃣ Eliminar la relación (NO la serie)
+            await _watchListSerieRepository.DeleteAsync(relation);
         }
 
+        // Obtener la watchlist del usuario
         public async Task<ICollection<SerieDto>> GetWatchlistAsync(int userId)
         {
-            // Verificar si está autenticado
+            // 1️⃣ Verificar que el usuario esté autenticado
             if (userId <= 0)
-                throw new BusinessException("Usuario no Autenticado.");
+                throw new BusinessException("UsuarioNoAutenticado");
 
-            // Obtener la watchlist del usuario
-            var watchlist = await (await _watchlistRepository.WithDetailsAsync(w => w.SeriesList)).
-                FirstOrDefaultAsync(w => w.UserId == userId);
-            if (watchlist == null || watchlist.SeriesList == null || !watchlist.SeriesList.Any())
+            // 2️⃣ Obtener la watchlist con las series asociadas
+            var watchlist = await (await _watchlistRepository
+                .WithDetailsAsync(
+                    w => w.Series,
+                    w => w.Series.Select(ws => ws.Serie)))
+                .FirstOrDefaultAsync(w => w.UserId == userId);
+
+            if (watchlist == null || !watchlist.Series.Any())
+                return new List<SerieDto>();
+
+            // 3️⃣ Mapear las series a SerieDto
+            return watchlist.Series.Select(ws => new SerieDto
             {
-                return new List<SerieDto>(); // Es mejor devolver una lista vacía que lanzar excepción
-            }
-
-            // Verificar que solo exista una watchlist por usuario
-            var count = await _watchlistRepository.CountAsync(w => w.UserId == userId);
-            if (count > 1)
-                throw new BusinessException("Inconsistencia: múltiples watchlists para el mismo usuario.");
-
-            // Mapear las series a SerieDto
-            return watchlist.SeriesList.Select(s => new SerieDto
-            {
-                ImdbId = s.ImdbId,
-                Title = s.Title,
-                Year = s.Year,
-                Genre = s.Genre,
-                Plot = s.Plot,
-                Country = s.Country,
-                Poster = s.Poster,
-                ImdbRating = s.ImdbRating,
-                TotalSeasons = s.TotalSeasons,
-                Runtime = s.Runtime,
-                Actors = s.Actors,
-                Director = s.Director,
-                Writer = s.Writer
+                ImdbId = ws.Serie.ImdbId,
+                Title = ws.Serie.Title,
+                Year = ws.Serie.Year,
+                Genre = ws.Serie.Genre,
+                Plot = ws.Serie.Plot,
+                Country = ws.Serie.Country,
+                Poster = ws.Serie.Poster,
+                ImdbRating = ws.Serie.ImdbRating,
+                TotalSeasons = ws.Serie.TotalSeasons,
+                Runtime = ws.Serie.Runtime,
+                Actors = ws.Serie.Actors,
+                Director = ws.Serie.Director,
+                Writer = ws.Serie.Writer
             }).ToList();
-
         }
     }
 }

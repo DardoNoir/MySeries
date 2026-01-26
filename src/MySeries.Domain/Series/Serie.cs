@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MySeries.Watchlists;
 using Volo.Abp.Domain.Entities;
 
 namespace MySeries.Series
@@ -19,6 +20,8 @@ namespace MySeries.Series
         public string? Actors { get; set; }     
         public string? Director { get; set; }    
         public string? Writer { get; set; }     
+
+        public ICollection<WatchListSerie> WatchLists { get; set; } = new List<WatchListSerie>();
 
     }
 }

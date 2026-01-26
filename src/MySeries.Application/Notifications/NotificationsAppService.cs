@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Emailing;
@@ -46,6 +47,7 @@ namespace MySeries.Notifications
         }
 
 
+        [RemoteService(IsEnabled = false)]
         public async Task SendNotificationAsync(int userId, string message)
         {
             // Traer el usuario desde el repositorio
@@ -62,6 +64,8 @@ namespace MySeries.Notifications
             await _notificationRepository.InsertAsync(notification);
         }
 
+
+        [RemoteService(IsEnabled = false)]
         public async Task NotifyByEmailAsync(int userId, string message)
         {
             // Traer el usuario desde el repositorio
@@ -83,6 +87,7 @@ namespace MySeries.Notifications
             );
         }
 
+        [RemoteService(IsEnabled = false)]
         public async Task MarkReadenAsync(int notificationId)
         {
             // Traer la notificación desde el repositorio

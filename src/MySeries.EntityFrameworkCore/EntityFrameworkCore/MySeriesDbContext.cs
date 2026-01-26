@@ -69,6 +69,8 @@ public class MySeriesDbContext :
     public DbSet<Notification> Notifications { get; set; }
     public DbSet<Usuario> Usuarios { get; set; }
 
+    public DbSet<WatchListSerie> WatchListSeries { get; set; }
+
     public MySeriesDbContext(DbContextOptions<MySeriesDbContext> options)
         : base(options)
     {
@@ -130,6 +132,23 @@ public class MySeriesDbContext :
             b.ConfigureByConvention();
             b.Property(x => x.UserName).IsRequired().HasMaxLength(60);
             b.Property(x => x.Password).IsRequired().HasMaxLength(15);
+        });
+
+        // --- Configuración de WatchListSerie  ---
+        builder.Entity<WatchListSerie>(b => 
+        {
+            b.ToTable(MySeriesConsts.DbTablePrefix + "WatchListSeries", MySeriesConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.HasKey(wls => new { wls.WatchListId, wls.SerieId });
+
+            b.HasOne(wls => wls.WatchList)
+                .WithMany(wl => wl.Series)
+                .HasForeignKey(wls => wls.WatchListId);
+
+            b.HasOne(wls => wls.Serie)
+                .WithMany(s => s.WatchLists)
+                .HasForeignKey(wls => wls.SerieId);
         });
 
         /* Configure your own tables/entities inside here */
