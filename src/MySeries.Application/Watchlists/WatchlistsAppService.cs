@@ -46,7 +46,7 @@ namespace MySeries.Watchlists
 
             // 4️⃣ Obtener la watchlist del usuario incluyendo sus series
             var watchlist = await (await _watchlistRepository
-                .WithDetailsAsync(w => w.Series))
+                .WithDetailsAsync(w => w.WatchListSeries))
                 .FirstOrDefaultAsync(w => w.UserId == userId);
 
             // 5️⃣ Si el usuario no tiene watchlist, crearla
@@ -107,15 +107,15 @@ namespace MySeries.Watchlists
             // 2️⃣ Obtener la watchlist con las series asociadas
             var watchlist = await (await _watchlistRepository
                 .WithDetailsAsync(
-                    w => w.Series,
-                    w => w.Series.Select(ws => ws.Serie)))
+                    w => w.WatchListSeries,
+                    w => w.WatchListSeries.Select(ws => ws.Serie)))
                 .FirstOrDefaultAsync(w => w.UserId == userId);
 
-            if (watchlist == null || !watchlist.Series.Any())
+            if (watchlist == null || !watchlist.WatchListSeries.Any())
                 return new List<SerieDto>();
 
             // 3️⃣ Mapear las series a SerieDto
-            return watchlist.Series.Select(ws => new SerieDto
+            return watchlist.WatchListSeries.Select(ws => new SerieDto
             {
                 ImdbId = ws.Serie.ImdbId,
                 Title = ws.Serie.Title,

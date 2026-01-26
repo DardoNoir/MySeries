@@ -1,23 +1,24 @@
-using MySeries.Series;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Volo.Abp.Domain.Entities;
-using static Volo.Abp.Identity.Settings.IdentitySettingNames;
 
 namespace MySeries.Watchlists
 {
-    public class WatchList : AggregateRoot<int>
+    public class WatchList : Entity<int>
     {
-        public int UserId { get; set; }
-        public ICollection<WatchListSerie> Series { get; set; }
-        
-        protected WatchList() { }
+        public int UserId { get; protected set; }
 
+        // ✅ Relación many-to-many vía tabla intermedia
+        public ICollection<WatchListSerie> WatchListSeries { get; protected set; }
+
+        protected WatchList()
+        {
+            WatchListSeries = new List<WatchListSerie>();
+        }
 
         public WatchList(int userId)
         {
             UserId = userId;
-            Series = new List<WatchListSerie>();
+            WatchListSeries = new List<WatchListSerie>();
         }
     }
 }

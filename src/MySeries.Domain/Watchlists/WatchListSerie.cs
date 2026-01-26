@@ -1,4 +1,4 @@
-using MySeries.Series;
+using MySeries;
 using Volo.Abp.Domain.Entities;
 
 namespace MySeries.Watchlists

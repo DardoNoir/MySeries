@@ -13,7 +13,7 @@ using Volo.Abp.EntityFrameworkCore;
 namespace MySeries.Migrations
 {
     [DbContext(typeof(MySeriesDbContext))]
-    [Migration("20260125220132_Entidades")]
+    [Migration("20260126192746_Entidades")]
     partial class Entidades
     {
         /// <inheritdoc />
@@ -62,81 +62,6 @@ namespace MySeries.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AppNotifications", (string)null);
-                });
-
-            modelBuilder.Entity("MySeries.Series.Serie", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Actors")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Director")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ExtraProperties")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ExtraProperties");
-
-                    b.Property<string>("Genre")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
-
-                    b.Property<string>("ImdbId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImdbRating")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Plot")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Poster")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Runtime")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("TotalSeasons")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("WatchListId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Writer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Year")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WatchListId");
-
-                    b.ToTable("AppSeries", (string)null);
                 });
 
             modelBuilder.Entity("MySeries.Usuarios.Usuario", b =>
@@ -194,24 +119,27 @@ namespace MySeries.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("nvarchar(40)")
-                        .HasColumnName("ConcurrencyStamp");
-
-                    b.Property<string>("ExtraProperties")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("ExtraProperties");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.ToTable("AppWatchLists", (string)null);
+                });
+
+            modelBuilder.Entity("MySeries.Watchlists.WatchListSerie", b =>
+                {
+                    b.Property<int>("WatchListId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SerieId")
+                        .HasColumnType("int");
+
+                    b.HasKey("WatchListId", "SerieId");
+
+                    b.HasIndex("SerieId");
+
+                    b.ToTable("AppWatchListSeries", (string)null);
                 });
 
             modelBuilder.Entity("Qualification", b =>
@@ -249,6 +177,76 @@ namespace MySeries.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AppQualifications", (string)null);
+                });
+
+            modelBuilder.Entity("Serie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Actors")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Director")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExtraProperties")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<string>("Genre")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ImdbId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImdbRating")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Plot")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Poster")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Runtime")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("TotalSeasons")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Writer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Year")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppSeries", (string)null);
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>
@@ -2108,11 +2106,23 @@ namespace MySeries.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
-            modelBuilder.Entity("MySeries.Series.Serie", b =>
+            modelBuilder.Entity("MySeries.Watchlists.WatchListSerie", b =>
                 {
-                    b.HasOne("MySeries.Watchlists.WatchList", null)
-                        .WithMany("SeriesList")
-                        .HasForeignKey("WatchListId");
+                    b.HasOne("Serie", "Serie")
+                        .WithMany("WatchListSeries")
+                        .HasForeignKey("SerieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MySeries.Watchlists.WatchList", "WatchList")
+                        .WithMany("WatchListSeries")
+                        .HasForeignKey("WatchListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Serie");
+
+                    b.Navigation("WatchList");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLogAction", b =>
@@ -2268,7 +2278,12 @@ namespace MySeries.Migrations
 
             modelBuilder.Entity("MySeries.Watchlists.WatchList", b =>
                 {
-                    b.Navigation("SeriesList");
+                    b.Navigation("WatchListSeries");
+                });
+
+            modelBuilder.Entity("Serie", b =>
+                {
+                    b.Navigation("WatchListSeries");
                 });
 
             modelBuilder.Entity("Volo.Abp.AuditLogging.AuditLog", b =>

@@ -48,10 +48,10 @@ namespace MySeries.Qualifications
 
             // Verificar que la serie esté en la lista de seguimiento del usuario
             var watchlist = await (await _watchlistsRepository
-                .WithDetailsAsync(w => w.SeriesList))
+                .WithDetailsAsync(w => w.WatchListSeries))
                 .FirstOrDefaultAsync(w =>
                 w.UserId == userId &&
-                w.SeriesList.Any(s => s.Id == serieId));
+                w.WatchListSeries.Any(s => s.SerieId == serieId));
 
             if (watchlist == null)
                 throw new BusinessException("La serie no está en la lista de seguimiento del usuario.");
@@ -95,10 +95,10 @@ namespace MySeries.Qualifications
 
             // Verificar que la serie esté en la lista de seguimiento del usuario
             var watchlist = await (await _watchlistsRepository
-                .WithDetailsAsync(w => w.SeriesList))
+                .WithDetailsAsync(w => w.WatchListSeries))
                 .FirstOrDefaultAsync(w =>
                     w.UserId == userId &&
-                    w.SeriesList.Any(s => s.Id == serieId));
+                    w.WatchListSeries.Any(s => s.SerieId == serieId));
 
             if (watchlist == null)
                 throw new BusinessException("La serie no está en la lista de seguimiento del usuario.");

@@ -14,7 +14,7 @@ using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.TenantManagement;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
-using MySeries.Series;
+using MySeries;
 using MySeries.Watchlists;
 using MySeries.Notifications;
 using MySeries.Usuarios;
@@ -135,20 +135,22 @@ public class MySeriesDbContext :
         });
 
         // --- Configuración de WatchListSerie  ---
-        builder.Entity<WatchListSerie>(b => 
+        builder.Entity<WatchListSerie>(b =>
         {
             b.ToTable(MySeriesConsts.DbTablePrefix + "WatchListSeries", MySeriesConsts.DbSchema);
             b.ConfigureByConvention();
 
-            b.HasKey(wls => new { wls.WatchListId, wls.SerieId });
+            b.HasKey(x => new { x.WatchListId, x.SerieId });
 
-            b.HasOne(wls => wls.WatchList)
-                .WithMany(wl => wl.Series)
-                .HasForeignKey(wls => wls.WatchListId);
+            b.HasOne(x => x.WatchList)
+                .WithMany(w => w.WatchListSeries)
+                .HasForeignKey(x => x.WatchListId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            b.HasOne(wls => wls.Serie)
-                .WithMany(s => s.WatchLists)
-                .HasForeignKey(wls => wls.SerieId);
+            b.HasOne(x => x.Serie)
+                .WithMany(s => s.WatchListSeries)
+                .HasForeignKey(x => x.SerieId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         /* Configure your own tables/entities inside here */

@@ -482,6 +482,33 @@ namespace MySeries.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AppSeries",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Genre = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
+                    Plot = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Year = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImdbId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImdbRating = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TotalSeasons = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Poster = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Runtime = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Actors = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Director = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Writer = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppSeries", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AppUsuarios",
                 columns: table => new
                 {
@@ -507,9 +534,7 @@ namespace MySeries.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -835,36 +860,27 @@ namespace MySeries.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AppSeries",
+                name: "AppWatchListSeries",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Genre = table.Column<string>(type: "nvarchar(128)", maxLength: 128, nullable: false),
-                    Plot = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Year = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    Country = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImdbId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImdbRating = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TotalSeasons = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Poster = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Runtime = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Actors = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Director = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Writer = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    WatchListId = table.Column<int>(type: "int", nullable: true),
-                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: false)
+                    WatchListId = table.Column<int>(type: "int", nullable: false),
+                    SerieId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AppSeries", x => x.Id);
+                    table.PrimaryKey("PK_AppWatchListSeries", x => new { x.WatchListId, x.SerieId });
                     table.ForeignKey(
-                        name: "FK_AppSeries_AppWatchLists_WatchListId",
+                        name: "FK_AppWatchListSeries_AppSeries_SerieId",
+                        column: x => x.SerieId,
+                        principalTable: "AppSeries",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppWatchListSeries_AppWatchLists_WatchListId",
                         column: x => x.WatchListId,
                         principalTable: "AppWatchLists",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1183,9 +1199,9 @@ namespace MySeries.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AppSeries_WatchListId",
-                table: "AppSeries",
-                column: "WatchListId");
+                name: "IX_AppWatchListSeries_SerieId",
+                table: "AppWatchListSeries",
+                column: "SerieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
@@ -1306,10 +1322,10 @@ namespace MySeries.Migrations
                 name: "AppQualifications");
 
             migrationBuilder.DropTable(
-                name: "AppSeries");
+                name: "AppUsuarios");
 
             migrationBuilder.DropTable(
-                name: "AppUsuarios");
+                name: "AppWatchListSeries");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
@@ -1334,6 +1350,9 @@ namespace MySeries.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUsers");
+
+            migrationBuilder.DropTable(
+                name: "AppSeries");
 
             migrationBuilder.DropTable(
                 name: "AppWatchLists");
