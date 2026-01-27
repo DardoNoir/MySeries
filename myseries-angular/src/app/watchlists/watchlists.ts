@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SerieDto } from '../models/SerieDto';
 import { WatchlistService } from '../services/watchlist.service';
+import { WatchlistSerieDto } from '../models/WatchlistSerieDto';
 
 @Component({
   standalone: true,
@@ -14,7 +14,7 @@ import { WatchlistService } from '../services/watchlist.service';
 })
 export class WatchlistComponent implements OnInit {
 
-  series: SerieDto[] = [];
+  series: WatchlistSerieDto[] = [];
   searchText = '';
   loading = false;
   userId!: number;
@@ -47,7 +47,7 @@ export class WatchlistComponent implements OnInit {
     );
   }
 
-  removeSerie(serie: SerieDto) {
+  removeSerie(serie: WatchlistSerieDto) {
     if (!serie.id) return;
 
     this.watchlistService.removeSeries(serie.id, this.userId).subscribe(() => {
@@ -58,6 +58,11 @@ export class WatchlistComponent implements OnInit {
   goToSearch() {
     this.router.navigateByUrl('/series');
   }
+
+  goToQualification(serie: WatchlistSerieDto) {
+  this.router.navigate(['/qualification', serie.id]);
+}
+
 
   goToMenu() {
     this.router.navigateByUrl('/menu');

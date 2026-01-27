@@ -158,7 +158,7 @@ namespace MySeries.Controllers
         }
 
         [HttpGet("get-watchlist")]
-        public async Task<ICollection<SerieDto>> GetWatchlistAsync([FromQuery] int userId)
+        public async Task<ICollection<WatchlistSerieDto>> GetWatchlistAsync([FromQuery] int userId)
         {
             return await _watchlistsAppService.GetWatchlistAsync(userId);
         }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SerieDto } from '../models/SerieDto';
+import { WatchlistSerieDto } from '../models/WatchlistSerieDto';
 
 @Injectable({ providedIn: 'root' })
 export class WatchlistService {
@@ -9,9 +9,9 @@ export class WatchlistService {
 
   constructor(private http: HttpClient) {}
 
-  getWatchlist(userId: number): Observable<SerieDto[]> {
+  getWatchlist(userId: number): Observable<WatchlistSerieDto[]> {
     const params = new HttpParams().set('userId', userId);
-    return this.http.get<SerieDto[]>(`${this.baseUrl}/get-watchlist`, { params });
+    return this.http.get<WatchlistSerieDto[]>(`${this.baseUrl}/get-watchlist`, { params });
   }
 
   addSeries(imdbId: string, userId: number): Observable<void> {

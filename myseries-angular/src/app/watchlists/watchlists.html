@@ -20,6 +20,19 @@
     <p>{{ serie.genre }}</p>
     <p>{{ serie.year }}</p>
 
+    <p *ngIf="serie.score; else noScore">
+      ⭐ {{ serie.score }}/10
+    </p>
+
+    <ng-template #noScore>
+      <p>Sin calificación</p>
+    </ng-template>
+
+    <button (click)="goToQualification(serie)">
+      ⭐ Calificar esta serie
+    </button>
+
     <button (click)="removeSerie(serie)">❌ Eliminar</button>
-  </div>
+</div>
+
 </div>

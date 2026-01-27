@@ -5,6 +5,7 @@ import { LoginComponent } from './login/login';
 import { MenuComponent } from './menu/menu';
 import { RegisterComponent } from './register/register';
 import { WatchlistComponent } from './watchlists/watchlists';
+import { QualificationComponent } from './qualifications/qualifications';
 
 
 export const Route: Routes = [
@@ -13,6 +14,7 @@ export const Route: Routes = [
   { path: 'menu', component: MenuComponent, canActivate: [authGuard] },
   { path: 'series', component: SeriesComponent, canActivate: [authGuard] },
   { path: 'watchlist', component: WatchlistComponent, canActivate: [authGuard] },
+  { path: 'qualification/:id', component: QualificationComponent, canActivate: [authGuard]},
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
 ];

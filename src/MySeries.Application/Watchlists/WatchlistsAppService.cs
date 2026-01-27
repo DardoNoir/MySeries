@@ -17,17 +17,21 @@ namespace MySeries.Watchlists
         private readonly IRepository<Serie, int> _serieRepository;
         private readonly IRepository<WatchListSerie> _watchListSerieRepository;
         private readonly SerieAppService _serieAppService;
+        private readonly IRepository<Qualification, int> _qualificationRepository;
+
 
         public WatchlistsAppService(
             IRepository<WatchList, int> watchlistRepository,
             IRepository<Serie, int> serieRepository,
             IRepository<WatchListSerie> watchListSerieRepository,
-            SerieAppService serieAppService)
+            SerieAppService serieAppService,
+            IRepository<Qualification, int> qualificationRepository)
         {
             _watchlistRepository = watchlistRepository;
             _serieRepository = serieRepository;
             _watchListSerieRepository = watchListSerieRepository;
             _serieAppService = serieAppService;
+            _qualificationRepository = qualificationRepository;
         }
 
         // Agregar una serie (desde la API) a la watchlist del usuario
@@ -100,41 +104,52 @@ namespace MySeries.Watchlists
 
         // Obtener la watchlist del usuario
         [RemoteService(IsEnabled = false)]
-        public async Task<ICollection<SerieDto>> GetWatchlistAsync(int userId)
+        public async Task<ICollection<WatchlistSerieDto>> GetWatchlistAsync(int userId)
+{
+    if (userId <= 0)
+        throw new BusinessException("Usuario No Autenticado");
+
+    var queryable = await _watchlistRepository.GetQueryableAsync();
+
+    var watchlist = await queryable
+        .Include(w => w.WatchListSeries)
+            .ThenInclude(ws => ws.Serie)
+        .FirstOrDefaultAsync(w => w.UserId == userId);
+
+    if (watchlist == null || !watchlist.WatchListSeries.Any())
+        return new List<WatchlistSerieDto>();
+
+    var serieIds = watchlist.WatchListSeries
+        .Where(ws => ws.Serie != null)
+        .Select(ws => ws.SerieId)
+        .ToList();
+
+    var qualifications = await (await _qualificationRepository.GetQueryableAsync())
+        .Where(q => q.UserId == userId && serieIds.Contains(q.SerieId))
+        .ToListAsync();
+
+    return watchlist.WatchListSeries
+        .Where(ws => ws.Serie != null)
+        .Select(ws =>
         {
-            // 1️⃣ Verificar que el usuario esté autenticado
-            if (userId <= 0)
-                throw new BusinessException("UsuarioNoAutenticado");
+            var qualification = qualifications
+                .FirstOrDefault(q => q.SerieId == ws.SerieId);
 
-            // 2️⃣ Obtener la watchlist con las series asociadas
-            var queryable = await _watchlistRepository.GetQueryableAsync();
-
-            var watchlist = await queryable
-                .Include(w => w.WatchListSeries)
-                .ThenInclude(ws => ws.Serie)
-                .FirstOrDefaultAsync(w => w.UserId == userId);
-
-            if (watchlist == null || !watchlist.WatchListSeries.Any())
-                return new List<SerieDto>();
-
-            // 3️⃣ Mapear las series a SerieDto
-            return watchlist.WatchListSeries.Select(ws => new SerieDto
+            return new WatchlistSerieDto
             {
-                Id = ws.SerieId,
-                ImdbId = ws.Serie.ImdbId,
+                Id = ws.Serie.Id,
                 Title = ws.Serie.Title,
                 Year = ws.Serie.Year,
                 Genre = ws.Serie.Genre,
-                Plot = ws.Serie.Plot,
-                Country = ws.Serie.Country,
                 Poster = ws.Serie.Poster,
-                ImdbRating = ws.Serie.ImdbRating,
-                TotalSeasons = ws.Serie.TotalSeasons,
-                Runtime = ws.Serie.Runtime,
-                Actors = ws.Serie.Actors,
-                Director = ws.Serie.Director,
-                Writer = ws.Serie.Writer
-            }).ToList();
-        }
+                ImdbId = ws.Serie.ImdbId!,
+                Score = qualification?.Score,
+                Review = qualification?.Review
+            };
+        })
+        .ToList();
+}
+
+
     }
 }
