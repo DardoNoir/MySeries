@@ -73,6 +73,7 @@ namespace MySeries.Watchlists
         }
 
         // Eliminar una serie de la watchlist del usuario
+        [RemoteService(IsEnabled = false)]
         public async Task RemoveSeriesAsync(int seriesId, int userId)
         {
             // 1️⃣ Verificar que el usuario esté autenticado
@@ -98,6 +99,7 @@ namespace MySeries.Watchlists
         }
 
         // Obtener la watchlist del usuario
+        [RemoteService(IsEnabled = false)]
         public async Task<ICollection<SerieDto>> GetWatchlistAsync(int userId)
         {
             // 1️⃣ Verificar que el usuario esté autenticado
@@ -118,6 +120,7 @@ namespace MySeries.Watchlists
             // 3️⃣ Mapear las series a SerieDto
             return watchlist.WatchListSeries.Select(ws => new SerieDto
             {
+                Id = ws.SerieId,
                 ImdbId = ws.Serie.ImdbId,
                 Title = ws.Serie.Title,
                 Year = ws.Serie.Year,

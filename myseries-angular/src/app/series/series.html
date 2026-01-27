@@ -23,6 +23,11 @@
       <h3>{{ serie.title }}</h3>
       <p>Año: {{ serie.year }}</p>
       <p>Género: {{ serie.genre }}</p>
+
+      <button (click)="addToFavorites(serie)">
+      ⭐ Agregar a Favoritas
+      </button>
+
     </div>
   </div>
 </div>

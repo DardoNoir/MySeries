@@ -18,6 +18,11 @@ export class MenuComponent {
     this.router.navigateByUrl('/series');
   }
 
+  goToWatchlist() {
+  this.router.navigateByUrl('/watchlist');
+  }
+
+
   logout() {
     this.auth.logout();
     this.router.navigateByUrl('/login');

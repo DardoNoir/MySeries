@@ -1,7 +1,9 @@
 export interface SerieDto {
-    id?: string;
+    id?: number;
     title: string;
     year: string;
     poster?: string;
     genre?: string;
+    imdbId?: string;
+
 }

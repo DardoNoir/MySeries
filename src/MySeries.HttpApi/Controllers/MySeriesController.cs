@@ -156,5 +156,18 @@ namespace MySeries.Controllers
         {
             await _watchlistsAppService.AddSeriesFromApiAsync(imdbId, userId);
         }
+
+        [HttpGet("get-watchlist")]
+        public async Task<ICollection<SerieDto>> GetWatchlistAsync([FromQuery] int userId)
+        {
+            return await _watchlistsAppService.GetWatchlistAsync(userId);
+        }
+
+        // ✅ Eliminar serie de watchlist
+        [HttpGet("remove-series")]
+        public async Task RemoveSeriesAsync([FromQuery] int serieId, [FromQuery] int userId)
+        {
+            await _watchlistsAppService.RemoveSeriesAsync(serieId, userId);
+        }
     }
 }
