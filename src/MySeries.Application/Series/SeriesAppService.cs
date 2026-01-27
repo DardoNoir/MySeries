@@ -1,6 +1,7 @@
 ﻿using MySeries.Application.Contracts;
 using MySeries.SerieService;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Dtos;
@@ -87,5 +88,24 @@ namespace MySeries.Series
             await Repository.InsertAsync(entity, autoSave: true);
             return ObjectMapper.Map<Serie, SerieDto>(entity);
         }
+
+        // Busca series almacenadas en la base de datos por título
+        [RemoteService(IsEnabled = false)]
+        public async Task<List<SerieDto>> SearchInDbByTitleAsync(string title)
+        {
+            // Normalizamos el texto para evitar problemas de mayúsculas/minúsculas
+            title = title.Trim();
+
+            // Consulta a la DB
+            var queryable = await Repository.GetQueryableAsync();
+
+            var series = queryable
+            .Where(s => s.Title.ToLower().Contains(title.ToLower()))
+            .ToList();
+
+
+            return ObjectMapper.Map<List<Serie>, List<SerieDto>>(series);
+        }
+
     }
 }

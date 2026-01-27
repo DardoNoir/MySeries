@@ -14,6 +14,7 @@ namespace MySeries.Application.Contracts
 
         Task<SerieDto> GetOrCreateFromApiAsync(string imdbId);
 
+        Task<List<SerieDto>> SearchInDbByTitleAsync(string title);
 
     }
 }

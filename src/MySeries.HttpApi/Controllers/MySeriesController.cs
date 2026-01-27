@@ -28,6 +28,13 @@ namespace MySeries.Controllers
         {
             return await _serieAppService.SearchByTitleAsync(title, genre);
         }
+
+        [HttpGet("search-in-db-by-title")]
+        public async Task<List<SerieDto>> SearchInDbByTitleAsync([FromQuery] string title)
+        {
+            return await _serieAppService.SearchInDbByTitleAsync(title);
+        }
+
     }
 
     [Route("api/app/usuarios")]
