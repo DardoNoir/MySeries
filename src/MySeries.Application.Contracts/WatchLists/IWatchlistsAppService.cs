@@ -12,6 +12,6 @@ namespace MySeries.Watchlists
     {
         Task AddSeriesFromApiAsync(string imdbId, int userId);
         Task RemoveSeriesAsync(int seriesId, int userId);
-        Task<ICollection<SerieDto>> GetWatchlistAsync(int userId);
+        Task<ICollection<WatchlistSerieDto>> GetWatchlistAsync(int userId);
     }
 }

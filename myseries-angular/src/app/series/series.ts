@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { SerieDto } from '../models/SerieDto';
 import { SerieService } from '../services/serie.service';
+import { WatchlistService } from '../services/watchlist.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -22,6 +23,7 @@ export class SeriesComponent {
   error?: string;
 
   constructor(private serieService: SerieService,
+    private watchlistService: WatchlistService,
     private router: Router
   ) {}
 
@@ -50,6 +52,14 @@ export class SeriesComponent {
     console.log('Searching', this.title, this.genre);
   }
 
+  addToFavorites(serie: SerieDto) {
+    const user = JSON.parse(localStorage.getItem('user')!);
+    this.watchlistService.addSeries(serie.imdbId!, user.id).subscribe(() => {
+      alert('Serie agregada a favoritas ⭐');
+    });
+  }
+  
+  
   goBack(): void {
     this.router.navigateByUrl('/menu');
   }

@@ -1,0 +1,38 @@
+<h2>⭐ Series Favoritas</h2>
+
+<div>
+  <input [(ngModel)]="searchText" placeholder="Buscar en favoritas..." />
+</div>
+
+<button (click)="goToSearch()">Agregar Series</button>
+<button (click)="goToMenu()">Volver al Menú</button>
+
+<div *ngIf="loading">Cargando...</div>
+
+<div *ngIf="!loading && series.length === 0">
+  No cuentas con Series, Agregar series
+</div>
+
+<div class="series-grid">
+  <div class="serie-card" *ngFor="let serie of filteredSeries()">
+    <img *ngIf="serie.poster" [src]="serie.poster" />
+    <h3>{{ serie.title }}</h3>
+    <p>{{ serie.genre }}</p>
+    <p>{{ serie.year }}</p>
+
+    <p *ngIf="serie.score; else noScore">
+      ⭐ {{ serie.score }}/10
+    </p>
+
+    <ng-template #noScore>
+      <p>Sin calificación</p>
+    </ng-template>
+
+    <button (click)="goToQualification(serie)">
+      ⭐ Calificar esta serie
+    </button>
+
+    <button (click)="removeSerie(serie)">❌ Eliminar</button>
+</div>
+
+</div>
