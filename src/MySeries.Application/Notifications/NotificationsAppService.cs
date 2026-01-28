@@ -28,7 +28,7 @@ namespace MySeries.Notifications
         }
 
 
-        public async Task<List<NotificationDto>> GetUserNotificationsAsync(int userId)
+        public async Task<List<NotificationDto>> GetUnreadAsync(int userId)
         {
             // Comprobar si el usuario está autenticado
             if (userId <= 0)
@@ -40,10 +40,37 @@ namespace MySeries.Notifications
             // Mapear las notificaciones a DTOs
             var notificationDtos = notifications.Select(n => new NotificationDto(userId, n.Message)
             {
+                Id=n.Id,
                 CreatedAt = n.CreatedAt
             }).ToList();
             // Devolver la lista de DTOs de notificaciones
             return notificationDtos;
+        }
+
+        public async Task<List<NotificationDto>> GetAllAsync(int userId)
+        {
+            // Comprobar si el usuario está autenticado
+            if (userId <= 0)
+            {
+                throw new Exception("Usuario no autenticado");
+            }
+            // Obtener las notificaciones no leidas del usuario desde el repositorio
+            var Notifications = await _notificationRepository.GetListAsync(n => n.UserId == userId);
+            // Mapear las notificaciones a DTOs
+            var notificationDtos = Notifications.Select(n => new NotificationDto(userId, n.Message)
+            {
+                Id=n.Id,
+                CreatedAt = n.CreatedAt
+            }).ToList();
+            // Devolver la lista de DTOs de notificaciones
+            return notificationDtos;
+        }
+
+        public async Task<int> GetUnreadCountAsync(int userId)
+        {
+            return await _notificationRepository.CountAsync(
+                n => n.UserId == userId && !n.IsRead
+            );
         }
 
 
