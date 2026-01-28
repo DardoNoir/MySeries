@@ -2,4 +2,9 @@
 
 <button (click)="goToSearch()">Buscar Series</button>
 <button (click)="goToWatchlist()">Series Favoritas ⭐</button>
+
+<button *ngIf="isAdmin()" (click)="goToMonitoring()">
+    📊 Monitoreo
+</button>
+
 <button (click)="logout()">Cerrar sesión</button>

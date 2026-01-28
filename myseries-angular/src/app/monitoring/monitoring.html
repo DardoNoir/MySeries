@@ -1,0 +1,17 @@
+<h2>📊 Monitoreo de la API</h2>
+
+<button (click)="goBack()">⬅ Volver al menú</button>
+
+<div *ngIf="stats">
+  <p>Total de llamadas: <b>{{ stats.totalCalls }}</b></p>
+  <p>Tiempo promedio: <b>{{ stats.averageResponseTime }} ms</b></p>
+  <p>Errores detectados: <b>{{ stats.errorCount }}</b></p>
+  <p>Consumos OMDb: <b>{{ stats.omdbApiConsumptions }}</b></p>
+
+  <h3>Top Endpoints</h3>
+  <ul>
+    <li *ngFor="let e of stats.topEndpoints">
+      {{ e.method }} - {{ e.count }} llamadas
+    </li>
+  </ul>
+</div>

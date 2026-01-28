@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'app-menu',
   templateUrl: './menu.html',
-  styleUrls: ['./menu.scss']
+  styleUrls: ['./menu.scss'],
+  imports:[CommonModule]
 })
 export class MenuComponent {
   constructor(
@@ -20,6 +22,14 @@ export class MenuComponent {
 
   goToWatchlist() {
   this.router.navigateByUrl('/watchlist');
+  }
+
+  isAdmin(): boolean {
+    return this.auth.isAdmin();
+  }
+
+  goToMonitoring() {
+    this.router.navigateByUrl('/monitoring');
   }
 
 
