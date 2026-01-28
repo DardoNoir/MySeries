@@ -4,6 +4,7 @@ export interface UsuarioDto {
   email?: string;
   notificationsByEmail: boolean;
   notificationsByApp: boolean;
+  rol: number;
 }
 
 export interface CreateUsuarioDto {

@@ -47,6 +47,14 @@ export class AuthService {
     return !!localStorage.getItem('user');
   }
 
+  isAdmin(): boolean {
+    const user = localStorage.getItem('user');
+    if (!user) return false;
+
+    const parsed = JSON.parse(user);
+    return parsed.rol === 1;
+  }
+
 
   setUser(user: UsuarioDto) {
     localStorage.setItem('user', JSON.stringify(user));
