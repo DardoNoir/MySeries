@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MySeries.Monitoring
 {
-    [Authorize]
+   // [Authorize]
     public class MonitoringAppService : MySeriesAppService, IApiMonitoringAppService
     {
         private readonly IAuditLogRepository _auditLogRepository;

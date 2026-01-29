@@ -141,22 +141,6 @@ namespace MySeries.Controllers
                 review
             );
         }
-
-
-        [HttpGet("modify-qualification")]
-        public async Task ModifyQualificationAsync(
-            [FromQuery] int userId,
-            [FromQuery] int serieId,
-            [FromQuery] int newScore,
-            [FromQuery] string? newReview)
-        {
-            await _qualificationsAppService.ModifyQualificationAsync(
-                userId,
-                serieId,
-                newScore,
-                newReview
-            );
-        }
     }
 
 
