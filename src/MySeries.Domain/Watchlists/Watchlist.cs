@@ -5,10 +5,10 @@ namespace MySeries.Watchlists
 {
     public class WatchList : Entity<int>
     {
-        public int UserId { get; protected set; }
+        public int UserId { get;  set; }
 
         // ✅ Relación many-to-many vía tabla intermedia
-        public ICollection<WatchListSerie> WatchListSeries { get; protected set; }
+        public ICollection<WatchListSerie> WatchListSeries { get;  set; }
 
         protected WatchList()
         {
