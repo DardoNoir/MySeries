@@ -9,19 +9,19 @@ export class NotificationService {
   constructor(private http: HttpClient) {}
 
   getUnread(userId: number) {
-    return this.http.get<any[]>(`${this.baseUrl}/unread`, {
+    return this.http.get<any[]>(`${this.baseUrl}/unread/${userId}`, {
       params: { userId }
     });
   }
 
   getAll(userId: number) {
-    return this.http.get<any[]>(`${this.baseUrl}/all`, {
+    return this.http.get<any[]>(`${this.baseUrl}`, {
       params: { userId }
     });
   }
 
   getUnreadCount(userId: number) {
-    return this.http.get<number>(`${this.baseUrl}/unread-count`, {
+    return this.http.get<number>(`${this.baseUrl}/unread-count/${userId}`, {
       params: { userId }
     });
   }

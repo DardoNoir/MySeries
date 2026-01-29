@@ -97,25 +97,6 @@ namespace MySeries.Controllers
         {
             await _notificationsAppService.MarkReadenAsync(notificationId);
         }
-
-        [HttpGet("unread")]
-        public async Task<List<NotificationDto>> GetUnreadAsync([FromQuery]int userId)
-        {
-           return await _notificationsAppService.GetUnreadAsync(userId);
-        }
-
-        [HttpGet("all")]
-        public async Task<List<NotificationDto>> GetAll(int userId)
-        {
-            return await _notificationsAppService.GetAllAsync(userId);
-        }
-
-        [HttpGet("unread-count")]
-        public async Task<int> GetUnreadCount(int userId)
-        {
-            return await  _notificationsAppService.GetUnreadCountAsync(userId);
-        }
-
     }
 
     [Route("api/app/qualifications")]
@@ -158,12 +139,6 @@ namespace MySeries.Controllers
         public async Task AddSeriesFromApiAsync([FromQuery] string imdbId, [FromQuery] int userId)
         {
             await _watchlistsAppService.AddSeriesFromApiAsync(imdbId, userId);
-        }
-
-        [HttpGet("get-watchlist")]
-        public async Task<ICollection<WatchlistSerieDto>> GetWatchlistAsync([FromQuery] int userId)
-        {
-            return await _watchlistsAppService.GetWatchlistAsync(userId);
         }
 
         // ✅ Eliminar serie de watchlist

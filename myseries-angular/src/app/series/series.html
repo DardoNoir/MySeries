@@ -6,7 +6,12 @@
     <input [(ngModel)]="title" placeholder="Ej. Breaking Bad" />
 
     <label>Género (opcional)</label>
-    <input [(ngModel)]="genre" placeholder="Comedy, Drama, Crime..." />
+    <select [(ngModel)]="genre">
+      <option value="">Todos</option>
+      <option *ngFor="let g of genres" [value]="g">
+        {{ g }}
+      </option>
+    </select>
 
     <button (click)="search()">Search</button>
   </div>
@@ -18,16 +23,15 @@
 
   <div class="series-grid">
     <div class="serie-card" *ngFor="let serie of series">
-      <img *ngIf="serie.poster" [src]="serie.poster" alt="poster" />
+      <img *ngIf="serie.poster" [src]="serie.poster" />
 
       <h3>{{ serie.title }}</h3>
       <p>Año: {{ serie.year }}</p>
       <p>Género: {{ serie.genre }}</p>
 
       <button (click)="addToFavorites(serie)">
-      ⭐ Agregar a Favoritas
+        ⭐ Agregar a Favoritas
       </button>
-
     </div>
   </div>
 </div>

@@ -42,7 +42,9 @@ namespace MySeries.Notifications
             {
                 Id=n.Id,
                 CreatedAt = n.CreatedAt
-            }).ToList();
+            })
+            .OrderByDescending(n => n.CreatedAt)
+            .ToList();
             // Devolver la lista de DTOs de notificaciones
             return notificationDtos;
         }
@@ -61,7 +63,9 @@ namespace MySeries.Notifications
             {
                 Id=n.Id,
                 CreatedAt = n.CreatedAt
-            }).ToList();
+            })
+            .OrderByDescending(n => n.CreatedAt)
+            .ToList();
             // Devolver la lista de DTOs de notificaciones
             return notificationDtos;
         }

@@ -17,12 +17,27 @@ import { Router } from '@angular/router';
 
 export class SeriesComponent {
   title = '';
-  genre = ''; 
+  genre = ''; // valor seleccionado
   loading = false;
   series: SerieDto[] = [];
   error?: string;
 
-  constructor(private serieService: SerieService,
+  // ✅ Lista de géneros para el combo
+  genres: string[] = [
+   // '',
+    'Action',
+    'Comedy',
+    'Drama',
+    'Crime',
+    'Sci-Fi',
+    'Fantasy',
+    'Thriller',
+    'Romance',
+    'Horror'
+  ];
+
+  constructor(
+    private serieService: SerieService,
     private watchlistService: WatchlistService,
     private router: Router
   ) {}
@@ -38,18 +53,15 @@ export class SeriesComponent {
     this.error = undefined;
 
     this.serieService.searchSeries(this.title, this.genre).subscribe({
-      next: (result) => {
+      next: result => {
         this.series = result;
         this.loading = false;
       },
-      error: err => {
-        console.error(err);
+      error: () => {
         this.error = 'Error fetching results';
         this.loading = false;
       }
     });
-
-    console.log('Searching', this.title, this.genre);
   }
 
   addToFavorites(serie: SerieDto) {
@@ -58,8 +70,7 @@ export class SeriesComponent {
       alert('Serie agregada a favoritas ⭐');
     });
   }
-  
-  
+
   goBack(): void {
     this.router.navigateByUrl('/menu');
   }

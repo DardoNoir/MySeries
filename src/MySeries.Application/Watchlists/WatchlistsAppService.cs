@@ -148,53 +148,53 @@ namespace MySeries.Watchlists
         }
 
         // Obtener la watchlist del usuario
-        [RemoteService(IsEnabled = false)]
+        //[RemoteService(IsEnabled = false)]
         public async Task<ICollection<WatchlistSerieDto>> GetWatchlistAsync(int userId)
-{
-    if (userId <= 0)
-        throw new BusinessException("Usuario No Autenticado");
-
-    var queryable = await _watchlistRepository.GetQueryableAsync();
-
-    var watchlist = await queryable
-        .Include(w => w.WatchListSeries)
-            .ThenInclude(ws => ws.Serie)
-        .FirstOrDefaultAsync(w => w.UserId == userId);
-
-    if (watchlist == null || !watchlist.WatchListSeries.Any())
-        return new List<WatchlistSerieDto>();
-
-    var serieIds = watchlist.WatchListSeries
-        .Where(ws => ws.Serie != null)
-        .Select(ws => ws.SerieId)
-        .ToList();
-
-    var qualifications = await (await _qualificationRepository.GetQueryableAsync())
-        .Where(q => q.UserId == userId && serieIds.Contains(q.SerieId))
-        .ToListAsync();
-
-    return watchlist.WatchListSeries
-        .Where(ws => ws.Serie != null)
-        .Select(ws =>
         {
-            var qualification = qualifications
-                .FirstOrDefault(q => q.SerieId == ws.SerieId);
+            if (userId <= 0)
+                throw new BusinessException("Usuario No Autenticado");
 
-            return new WatchlistSerieDto
+            var queryable = await _watchlistRepository.GetQueryableAsync();
+
+            var watchlist = await queryable
+                .Include(w => w.WatchListSeries)
+                    .ThenInclude(ws => ws.Serie)
+                    .FirstOrDefaultAsync(w => w.UserId == userId);
+
+            if (watchlist == null || !watchlist.WatchListSeries.Any())
+                return new List<WatchlistSerieDto>();
+
+            var serieIds = watchlist.WatchListSeries
+                .Where(ws => ws.Serie != null)
+                .Select(ws => ws.SerieId)
+                .ToList();
+
+            var qualifications = await (await _qualificationRepository.GetQueryableAsync())
+                .Where(q => q.UserId == userId && serieIds.Contains(q.SerieId))
+                .ToListAsync();
+
+            return watchlist.WatchListSeries
+            .Where(ws => ws.Serie != null)
+            .Select(ws =>
             {
-                Id = ws.Serie.Id,
-                Title = ws.Serie.Title,
-                Year = ws.Serie.Year,
-                Genre = ws.Serie.Genre,
-                Poster = ws.Serie.Poster,
-                ImdbId = ws.Serie.ImdbId!,
-                Score = qualification?.Score,
-                Review = qualification?.Review
-            };
-        })
-        .ToList();
-}
+                var qualification = qualifications
+                    .FirstOrDefault(q => q.SerieId == ws.SerieId);
 
-
+                return new WatchlistSerieDto
+                {
+                    Id = ws.Serie.Id,
+                    Title = ws.Serie.Title,
+                    Year = ws.Serie.Year,
+                    Genre = ws.Serie.Genre,
+                    Poster = ws.Serie.Poster,                            
+                    ImdbId = ws.Serie.ImdbId!,
+                    Score = qualification?.Score,
+                    Review = qualification?.Review
+                };
+            })
+            .OrderByDescending(s => s.Score.HasValue)
+            .ThenByDescending(s => s.Score)
+            .ToList();
+        }
     }
 }

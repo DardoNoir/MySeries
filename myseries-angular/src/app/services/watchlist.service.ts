@@ -10,9 +10,11 @@ export class WatchlistService {
   constructor(private http: HttpClient) {}
 
   getWatchlist(userId: number): Observable<WatchlistSerieDto[]> {
-    const params = new HttpParams().set('userId', userId);
-    return this.http.get<WatchlistSerieDto[]>(`${this.baseUrl}/get-watchlist`, { params });
+    return this.http.get<WatchlistSerieDto[]>(
+      `${this.baseUrl}/watchlist/${userId}`
+    );
   }
+
 
   addSeries(imdbId: string, userId: number): Observable<void> {
     const params = new HttpParams()
