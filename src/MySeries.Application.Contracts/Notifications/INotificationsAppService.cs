@@ -9,9 +9,13 @@ namespace MySeries.Notifications
 {
     public interface INotificationsAppService: IApplicationService
     {
-        Task<List<NotificationDto>> GetUserNotificationsAsync(int userId);
+        Task<List<NotificationDto>> GetUnreadAsync(int userId);
         Task SendNotificationAsync(int userId, string message);
         Task NotifyByEmailAsync(int userId, string message);
         Task MarkReadenAsync(int notificationId);
+
+        Task<List<NotificationDto>> GetAllAsync(int userId);
+        Task<int> GetUnreadCountAsync(int userId);
+
     }
 }

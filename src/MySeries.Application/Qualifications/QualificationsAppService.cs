@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MySeries.Notifications;
 using MySeries.Series;
+using MySeries.Usuarios;
 using MySeries.Watchlists;
 using System;
 using System.Collections.Generic;
@@ -18,14 +20,20 @@ namespace MySeries.Qualifications
         private readonly IRepository<Qualification, int> _qualificationsRepository;
         private readonly IRepository<WatchList, int> _watchlistsRepository;
         private readonly IRepository<Serie, int> _seriesRepository;
+        private readonly NotificationsAppService _notificationsAppService;
+        private readonly IRepository<Usuario, int> _userRepository;
         public QualificationsAppService(
             IRepository<Qualification, int> qualificationsRepository,
             IRepository<WatchList, int> watchlistsRepository,
-            IRepository<Serie, int> seriesRepository)
+            IRepository<Serie, int> seriesRepository,
+             NotificationsAppService notificationsAppService,
+            IRepository<Usuario,int> userRepositry)
         {
             _qualificationsRepository = qualificationsRepository;
             _watchlistsRepository = watchlistsRepository;
             _seriesRepository = seriesRepository;
+            _notificationsAppService = notificationsAppService;
+            _userRepository = userRepositry;
         }
 
         // Calificar una serie
@@ -36,6 +44,8 @@ namespace MySeries.Qualifications
             // Verificar que esté autenticado
             if (userId <= 0)
                 throw new BusinessException("Usuario no autenticado.");
+            
+            var user = await _userRepository.GetAsync(userId);
 
             // Validar que la puntuación esté entre 1 y 10
             if (Score < 1 || Score > 10)
@@ -67,54 +77,46 @@ namespace MySeries.Qualifications
                 qualificated.Score = Score;
                 qualificated.Review = Review;
                 await _qualificationsRepository.UpdateAsync(qualificated);
+
+                if (user.NotificationsByApp)
+                {
+                    await _notificationsAppService.SendNotificationAsync(
+                        userId,
+                        $"🔄 Actualizaste tu calificación de \"{serie.Title}\" a {Score}/10"
+                    );
+                }
+
+                if (user.NotificationsByEmail)
+                {
+                    await _notificationsAppService.NotifyByEmailAsync(
+                        userId,
+                        $"🔄 Actualizaste tu calificación de \"{serie.Title}\" a {Score}/10"
+                    );
+                }
+
             }
             // Si no la ha calificado, crear una nueva calificación
             else
             {
                 var qualification = new Qualification(userId, serieId, Score, Review);
-                await _qualificationsRepository.InsertAsync(qualification);
+                await _qualificationsRepository.InsertAsync(qualification); 
+
+                if (user.NotificationsByApp)
+                {
+                    await _notificationsAppService.SendNotificationAsync(
+                        userId,
+                        $"⭐ Calificaste la serie \"{serie.Title}\" con {Score}/10"
+                    );
+                }
+
+                if (user.NotificationsByEmail)
+                {
+                    await _notificationsAppService.NotifyByEmailAsync(
+                        userId,
+                        $"⭐ Calificaste la serie \"{serie.Title}\" con {Score}/10"
+                    );
+                }               
             }
-        }
-
-        // Modificar una calificación existente
-        [RemoteService(IsEnabled = false)]
-        public async Task ModifyQualificationAsync(int userId, int serieId, int NewScore, string? NewReview)
-        {
-            // Verificar que esté autenticado
-            if (userId <= 0)
-                throw new BusinessException("Usuario no autenticado.");
-
-            // Validar que la nueva puntuación esté entre 1 y 10
-            if (NewScore < 1 || NewScore > 10)
-                throw new BusinessException("La puntuación debe estar entre 1 y 10.");
-
-            // Verificar que la serie exista
-            var serie = await _seriesRepository.FirstOrDefaultAsync(s => s.Id == serieId);
-            if (serie == null)
-                throw new BusinessException("La serie no existe.");
-
-            // Verificar que la serie esté en la lista de seguimiento del usuario
-            var watchlist = await (await _watchlistsRepository
-                .WithDetailsAsync(w => w.WatchListSeries))
-                .FirstOrDefaultAsync(w =>
-                    w.UserId == userId &&
-                    w.WatchListSeries.Any(s => s.SerieId == serieId));
-
-            if (watchlist == null)
-                throw new BusinessException("La serie no está en la lista de seguimiento del usuario.");
-
-            // Verificar si el usuario ha calificado la serie previamente
-            var qualificated = await _qualificationsRepository.
-                FirstOrDefaultAsync(q => q.UserId == userId && q.SerieId == serieId);
-
-            // Si no ha calificado la serie, lanzar una excepción
-            if (qualificated == null)
-                throw new BusinessException("No existe una calificación previa para esta serie.");
-
-            // Actualizar la calificación y reseña
-            qualificated.Score = NewScore;
-            qualificated.Review = NewReview;
-            await _qualificationsRepository.UpdateAsync(qualificated);
         }
     }
 }

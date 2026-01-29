@@ -97,6 +97,25 @@ namespace MySeries.Controllers
         {
             await _notificationsAppService.MarkReadenAsync(notificationId);
         }
+
+        [HttpGet("unread")]
+        public async Task<List<NotificationDto>> GetUnreadAsync([FromQuery]int userId)
+        {
+           return await _notificationsAppService.GetUnreadAsync(userId);
+        }
+
+        [HttpGet("all")]
+        public async Task<List<NotificationDto>> GetAll(int userId)
+        {
+            return await _notificationsAppService.GetAllAsync(userId);
+        }
+
+        [HttpGet("unread-count")]
+        public async Task<int> GetUnreadCount(int userId)
+        {
+            return await  _notificationsAppService.GetUnreadCountAsync(userId);
+        }
+
     }
 
     [Route("api/app/qualifications")]
@@ -120,22 +139,6 @@ namespace MySeries.Controllers
                 serieId,
                 score,
                 review
-            );
-        }
-
-
-        [HttpGet("modify-qualification")]
-        public async Task ModifyQualificationAsync(
-            [FromQuery] int userId,
-            [FromQuery] int serieId,
-            [FromQuery] int newScore,
-            [FromQuery] string? newReview)
-        {
-            await _qualificationsAppService.ModifyQualificationAsync(
-                userId,
-                serieId,
-                newScore,
-                newReview
             );
         }
     }

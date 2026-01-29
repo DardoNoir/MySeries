@@ -1,8 +1,9 @@
 using System;
+using Volo.Abp.Application.Dtos;
 
 namespace MySeries.Notifications
 {
-    public class NotificationDto
+    public class NotificationDto : EntityDto<int>
     {
         public int UserId { get; set; }
         public bool IsRead { get; set; }  

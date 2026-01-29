@@ -1,3 +1,4 @@
+using MySeries.Notifications;
 using MySeries.Usuarios;
 using System;
 using System.Threading.Tasks;
@@ -10,10 +11,12 @@ namespace MySeries.Application.Usuarios
     public class UsuariosAppService : ApplicationService, IUsuariosAppService
     {
         private readonly IRepository<Usuario, int> _userRepository;
+        private readonly NotificationsAppService _notificationService;
 
-        public UsuariosAppService(IRepository<Usuario, int> userRepository)
+        public UsuariosAppService(IRepository<Usuario, int> userRepository, NotificationsAppService notificationsAppService)
         {
             _userRepository = userRepository;
+            _notificationService = notificationsAppService;
         }
 
         // 1️⃣ Crear y guardar usuario
@@ -48,6 +51,25 @@ namespace MySeries.Application.Usuarios
 
             // Guardar
             await _userRepository.InsertAsync(user, autoSave: true);
+
+            // 🎉 Notificación bienvenida APP
+            if (user.NotificationsByApp)
+            {
+                await _notificationService.SendNotificationAsync(
+                    user.Id,
+                    $"👋 Bienvenido {user.UserName} a MySeries!"
+                );
+            }
+
+            // ✉️ Notificación bienvenida EMAIL
+            if (user.NotificationsByEmail)
+            {
+                await _notificationService.NotifyByEmailAsync(
+                    user.Id,
+                    "¡Bienvenido a MySeries! 🎬🍿"
+                );
+            }
+
 
             // Mapear a DTO
             return new UsuarioDto

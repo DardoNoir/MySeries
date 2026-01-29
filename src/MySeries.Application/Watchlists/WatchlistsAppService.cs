@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MySeries.Notifications;
 using MySeries.Series;
 using MySeries.SerieService;
+using MySeries.Usuarios;
 using MySeries.Watchlists;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,8 @@ namespace MySeries.Watchlists
         private readonly IRepository<WatchListSerie> _watchListSerieRepository;
         private readonly SerieAppService _serieAppService;
         private readonly IRepository<Qualification, int> _qualificationRepository;
+        private readonly NotificationsAppService _notificationsAppService;
+        private readonly IRepository<Usuario, int> _userRepository;
 
 
         public WatchlistsAppService(
@@ -25,13 +29,17 @@ namespace MySeries.Watchlists
             IRepository<Serie, int> serieRepository,
             IRepository<WatchListSerie> watchListSerieRepository,
             SerieAppService serieAppService,
-            IRepository<Qualification, int> qualificationRepository)
+            IRepository<Qualification, int> qualificationRepository,
+            NotificationsAppService notificationsAppService,
+            IRepository<Usuario,int> userRepositry)
         {
             _watchlistRepository = watchlistRepository;
             _serieRepository = serieRepository;
             _watchListSerieRepository = watchListSerieRepository;
             _serieAppService = serieAppService;
             _qualificationRepository = qualificationRepository;
+            _notificationsAppService = notificationsAppService;
+            _userRepository = userRepositry;
         }
 
         // Agregar una serie (desde la API) a la watchlist del usuario
@@ -47,6 +55,7 @@ namespace MySeries.Watchlists
 
             // 3️⃣ Obtener la entidad Serie persistida
             var serieEntity = await _serieRepository.GetAsync(s => s.ImdbId == imdbId);
+            var user = await _userRepository.GetAsync(userId);
 
             // 4️⃣ Obtener la watchlist del usuario incluyendo sus series
             var watchlist = await (await _watchlistRepository
@@ -74,6 +83,22 @@ namespace MySeries.Watchlists
             );
 
             await _watchListSerieRepository.InsertAsync(relation);
+
+             if (user.NotificationsByApp)
+            {
+                await _notificationsAppService.SendNotificationAsync(
+                    userId,
+                    $"⭐ Agregaste \"{serieEntity.Title}\" a tu lista de seguimiento"
+                );
+            }
+
+            if (user.NotificationsByEmail)
+            {
+                await _notificationsAppService.NotifyByEmailAsync(
+                    userId,
+                    $"⭐ Agregaste \"{serieEntity.Title}\" a tu lista de seguimiento"
+                );
+            }
         }
 
         // Eliminar una serie de la watchlist del usuario
@@ -83,6 +108,7 @@ namespace MySeries.Watchlists
             // 1️⃣ Verificar que el usuario esté autenticado
             if (userId <= 0)
                 throw new BusinessException("UsuarioNoAutenticado");
+            
 
             // 2️⃣ Obtener la watchlist del usuario
             var watchlist = await _watchlistRepository
@@ -90,6 +116,9 @@ namespace MySeries.Watchlists
 
             if (watchlist == null)
                 throw new BusinessException("ListaDeSeguimientoNoEncontrada");
+
+            var serie = await _serieRepository.GetAsync(seriesId);
+            var user = await _userRepository.GetAsync(userId);
 
             // 3️⃣ Buscar la relación WatchListSerie
             var relation = await _watchListSerieRepository.FirstOrDefaultAsync(
@@ -100,6 +129,22 @@ namespace MySeries.Watchlists
 
             // 4️⃣ Eliminar la relación (NO la serie)
             await _watchListSerieRepository.DeleteAsync(relation);
+
+            if (user.NotificationsByApp)
+            {
+                await _notificationsAppService.SendNotificationAsync(
+                    userId,
+                    $"❌ Quitaste \"{serie.Title}\" de tu lista de seguimiento"
+                );
+            }
+
+            if (user.NotificationsByEmail)
+            {
+                await _notificationsAppService.NotifyByEmailAsync(
+                    userId,
+                    $"❌ Quitaste \"{serie.Title}\" de tu lista de seguimiento"
+                );
+            }
         }
 
         // Obtener la watchlist del usuario

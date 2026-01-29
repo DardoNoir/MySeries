@@ -1,0 +1,14 @@
+<h2>Notificaciones</h2>
+
+<h3>No leídas</h3>
+<div *ngFor="let n of unread">
+  {{ n.message }}
+  <button (click)="markRead(n.id)">Marcar como Leída</button>
+</div>
+
+<h3>Todas</h3>
+<div *ngFor="let n of all">
+  {{ n.message }} ✔️
+</div>
+
+<button (click)="goBack()">⬅ Volver al menú</button>

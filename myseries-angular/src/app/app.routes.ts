@@ -8,6 +8,7 @@ import { WatchlistComponent } from './watchlists/watchlists';
 import { QualificationComponent } from './qualifications/qualifications';
 import { MonitoringComponent } from './monitoring/monitoring';
 import { adminGuard } from './login/admin.guard';
+import { NotificationsComponent } from './notifications/notifications';
 
 
 export const Route: Routes = [
@@ -17,6 +18,7 @@ export const Route: Routes = [
   { path: 'series', component: SeriesComponent, canActivate: [authGuard] },
   { path: 'watchlist', component: WatchlistComponent, canActivate: [authGuard] },
   { path: 'qualification/:id', component: QualificationComponent, canActivate: [authGuard]},
+  { path: 'notifications', component: NotificationsComponent, canActivate: [authGuard]},
   { path: 'monitoring', component: MonitoringComponent, canActivate: [authGuard, adminGuard]},
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }

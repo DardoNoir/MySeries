@@ -7,4 +7,12 @@
     📊 Monitoreo
 </button>
 
+<button (click)="goToNotifications()">
+  🔔
+  <span *ngIf="unreadCount > 0" class="badge">
+    {{ unreadCount }}
+  </span>
+</button>
+
+
 <button (click)="logout()">Cerrar sesión</button>

@@ -55,6 +55,13 @@ export class AuthService {
     return parsed.rol === 1;
   }
 
+  getUser() {
+  const user = localStorage.getItem('user');
+  if (!user) throw new Error('Usuario no logueado');
+  return JSON.parse(user);
+}
+
+
 
   setUser(user: UsuarioDto) {
     localStorage.setItem('user', JSON.stringify(user));
