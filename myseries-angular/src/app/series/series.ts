@@ -33,7 +33,14 @@ export class SeriesComponent {
     'Fantasy',
     'Thriller',
     'Romance',
-    'Horror'
+    'Horror',
+    'Adventure',
+    'Mystery',
+    'Animation',
+    'Documentary',
+    'Family',
+    'Biography',
+    'History',
   ];
 
   constructor(

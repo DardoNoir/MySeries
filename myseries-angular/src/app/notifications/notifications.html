@@ -1,14 +1,44 @@
-<h2>Notificaciones</h2>
+<div class="notifications-container">
+  
+  <header class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      <span class="arrow">←</span> Volver
+    </button>
+    <h2>Centro de Notificaciones</h2>
+  </header>
 
-<h3>No leídas</h3>
-<div *ngFor="let n of unread">
-  {{ n.message }}
-  <button (click)="markRead(n.id)">Marcar como Leída</button>
+  <div class="section-group" *ngIf="unread.length > 0">
+    <h3 class="section-title">Nuevas ({{ unread.length }})</h3>
+    
+    <div class="notification-list">
+      <div *ngFor="let n of unread" class="notif-card unread-card">
+        <div class="notif-content">
+          <span class="dot"></span>
+          <p>{{ n.message }}</p>
+        </div>
+        <button class="mark-btn" (click)="markRead(n.id)">
+          Marcar leída
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="unread?.length === 0" class="empty-state">
+    <p>🎉 ¡Estás al día! No tienes notificaciones nuevas.</p>
+  </div>
+
+  <div class="section-group">
+    <h3 class="section-title">Historial</h3>
+    
+    <div class="notification-list">
+  <div *ngFor="let n of all" class="notif-card read-card">
+    <p class="notif-text">{{ n.message }}</p>
+    
+    <span class="check-icon" [class.active]="n.isRead">
+       ✔
+    </span>
+  </div>
 </div>
+  </div>
 
-<h3>Todas</h3>
-<div *ngFor="let n of all">
-  {{ n.message }} ✔️
 </div>
-
-<button (click)="goBack()">⬅ Volver al menú</button>

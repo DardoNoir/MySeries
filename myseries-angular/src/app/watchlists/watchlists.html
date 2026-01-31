@@ -1,38 +1,73 @@
-<h2>⭐ Series Favoritas</h2>
-
-<div>
-  <input [(ngModel)]="searchText" placeholder="Buscar en favoritas..." />
-</div>
-
-<button (click)="goToSearch()">Agregar Series</button>
-<button (click)="goToMenu()">Volver al Menú</button>
-
-<div *ngIf="loading">Cargando...</div>
-
-<div *ngIf="!loading && series.length === 0">
-  No cuentas con Series, Agregar series
-</div>
-
-<div class="series-grid">
-  <div class="serie-card" *ngFor="let serie of filteredSeries()">
-    <img *ngIf="serie.poster" [src]="serie.poster" />
-    <h3>{{ serie.title }}</h3>
-    <p>{{ serie.genre }}</p>
-    <p>{{ serie.year }}</p>
-
-    <p *ngIf="serie.score; else noScore">
-      ⭐ {{ serie.score }}/10
-    </p>
-
-    <ng-template #noScore>
-      <p>Sin calificación</p>
-    </ng-template>
-
-    <button (click)="goToQualification(serie)">
-      ⭐ Calificar esta serie
+<div class="favorites-container">
+  
+  <header class="page-header">
+    <button class="back-btn" (click)="goToMenu()">
+      <span>←</span> Volver
     </button>
+    <h2>Mis Series Favoritas</h2>
+  </header>
 
-    <button (click)="removeSerie(serie)">❌ Eliminar</button>
+  <div class="toolbar-card">
+    <div class="search-wrapper">
+      <span class="search-icon">🔍</span>
+      <input [(ngModel)]="searchText" placeholder="Filtrar en mis favoritas..." />
+    </div>
+
+    <button class="add-btn" (click)="goToSearch()">
+      Agregar Nuevas
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="state-msg">
+    <div class="spinner"></div> Cargando tu colección...
+  </div>
+
+  <div *ngIf="!loading && series.length === 0" class="empty-state">
+    <div class="empty-icon">📺</div>
+    <h3>Aún no tienes favoritos</h3>
+    <p>Agrega series a tu lista para verlas aquí.</p>
+  
+  </div>
+
+  <div class="series-grid">
+    <div class="serie-card" *ngFor="let serie of filteredSeries()">
+  
+  <div class="poster-wrapper">
+    <img *ngIf="serie.poster" [src]="serie.poster" alt="{{serie.title}}" />
+    <div *ngIf="!serie.poster" class="no-poster">🎬</div>
+
+    <div class="score-badge" [class.has-score]="serie.score != null">
+      <span *ngIf="serie.score != null">⭐ {{ serie.score }}/10</span>
+      <span *ngIf="serie.score == null" class="no-rate">Sin nota</span>
+    </div>
+  </div>
+
+  <div class="card-content">
+    <h3>{{ serie.title }}</h3>
+    
+    <div class="meta-info">
+      <span>{{ serie.year }}</span> <span class="dot">•</span> <span>{{ serie.genre }}</span>
+    </div>
+
+    <div class="user-review" *ngIf="serie.review">
+      <span class="quote-icon">❝</span>
+      <p>{{ serie.review }}</p>
+    </div>
+
+    <div class="user-review empty" *ngIf="!serie.review">
+      <em>Sin reseña escrita...</em>
+    </div>
+
+    <div class="actions">
+      <button class="rate-btn" (click)="goToQualification(serie)">
+        ✏️ Calificar
+      </button>
+      <button class="delete-btn" (click)="removeSerie(serie)">
+        Eliminar
+      </button>
+    </div>
+  </div>
+
 </div>
-
+  </div>
 </div>

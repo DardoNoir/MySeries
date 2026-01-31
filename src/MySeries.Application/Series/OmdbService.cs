@@ -101,7 +101,7 @@ namespace MySeries.Series
 
             if (detail == null)
                 return null;
-            
+
             return new SerieDto
             {
                 ImdbId = imdbId,

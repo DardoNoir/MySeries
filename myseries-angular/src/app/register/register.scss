@@ -1,0 +1,167 @@
+/* --- WRAPPER GENERAL (Mismo estilo del Login) --- */
+:host {
+  display: block;
+  height: 100vh;
+  width: 100vw;
+  margin: -2rem; /* Ajuste para ignorar padding padre si es necesario */
+}
+
+.main-wrapper {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Fondo degradado oscuro */
+}
+
+/* --- TARJETA --- */
+.signup-card {
+  width: 100%;
+  max-width: 420px;
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 2.5rem 3rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+h2 {
+  margin: 0;
+  color: #2b2b45;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: -1rem 0 0.5rem 0;
+  color: #8898aa;
+  font-size: 0.9rem;
+}
+
+/* --- INPUTS DE TEXTO --- */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  input[type="text"],
+  input[type="password"],
+  input[type="email"] {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: #f8f9fa;
+
+    &:focus {
+      outline: none;
+      border-color: #5b6cff;
+      background-color: #fff;
+      box-shadow: 0 0 0 3px rgba(91, 108, 255, 0.1);
+    }
+  }
+}
+
+/* --- CHECKBOXES --- */
+.preferences-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+  background-color: #f8f9ff;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px dashed #ced4da;
+}
+
+.label-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #5b6cff;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #555;
+  width: 100%;
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #5b6cff; /* Pinta el checkbox de azul */
+    cursor: pointer;
+  }
+  
+  &:hover {
+    color: #333;
+  }
+}
+
+/* --- BOTONES --- */
+.primary-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #5b6cff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 4px 6px rgba(91, 108, 255, 0.25);
+
+  &:hover {
+    background-color: #4a5be0;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.link-btn {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: #2b2b45;
+  }
+}
+
+/* --- ERROR --- */
+.error-msg {
+  background-color: #fff5f5;
+  color: #e53e3e;
+  padding: 0.8rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  border: 1px solid #fed7d7;
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
