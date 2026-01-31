@@ -17,7 +17,7 @@ namespace MySeries.Series
     public class OmdbService : ISeriesApiService, ITransientDependency
     {
         // API Key de OMDb
-        private static readonly string apiKey = "fa5ffac0";
+        private static readonly string apiKey = "844b1b8b";
         // URL base de la API de OMDb
         private static readonly string baseUrl = "http://www.omdbapi.com/";
 
@@ -101,7 +101,7 @@ namespace MySeries.Series
 
             if (detail == null)
                 return null;
-            
+
             return new SerieDto
             {
                 ImdbId = imdbId,
