@@ -1,0 +1,202 @@
+/* Contenedor Principal (Fondo gris claro consistente con Notificaciones) */
+.series-container {
+  background-color: #f4f6f9;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Cabecera */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.8rem;
+    color: #2b2b45;
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #666;
+  font-weight: 600;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #e2e6ea;
+    color: #333;
+  }
+}
+
+/* --- PANEL DE BÚSQUEDA --- */
+.search-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  display: flex;
+  flex-wrap: wrap; /* Para que se adapte en móviles */
+  gap: 1.5rem;
+  align-items: flex-end; /* Alinea el botón con los inputs */
+  margin-bottom: 2.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 200px;
+
+  label {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 0.5rem;
+  }
+
+  input, select {
+    padding: 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #5b6cff; /* Tu color azul */
+    }
+  }
+}
+
+.primary-btn {
+  background-color: #5b6cff;
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s, background-color 0.2s;
+  height: 46px; /* Para igualar altura de inputs */
+
+  &:hover {
+    background-color: #4a5be0;
+    transform: translateY(-1px);
+  }
+  
+  &:active { transform: scale(0.98); }
+}
+
+/* --- GRILLA DE RESULTADOS --- */
+.series-grid {
+  display: grid;
+  /* Columnas automáticas: Mínimo 200px, si hay espacio se estiran */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+/* Tarjeta de Serie */
+.serie-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+}
+
+/* Poster de la serie */
+.poster-wrapper {
+  height: 300px;
+  width: 100%;
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Recorta la imagen para llenar el espacio sin deformar */
+  }
+
+  .no-poster {
+    font-size: 3rem;
+    opacity: 0.3;
+  }
+}
+
+/* Contenido de la tarjeta */
+.card-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+  h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #2b2b45;
+  }
+}
+
+.meta-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.genre-tag {
+  background-color: #eff2f7;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+/* Botón Favoritos */
+.fav-btn {
+  margin-top: auto; /* Empuja el botón al fondo de la tarjeta */
+  width: 100%;
+  padding: 0.6rem;
+  background-color: transparent;
+  border: 1px solid #ffc107; /* Amarillo suave */
+  color: #d4a000;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #ffc107;
+    color: white;
+  }
+}
+
+/* Mensajes de estado */
+.state-message {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #666;
+  
+  &.error { color: #dc3545; }
+}

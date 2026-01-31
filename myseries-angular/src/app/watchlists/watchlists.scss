@@ -1,0 +1,228 @@
+/* Contenedor General */
+.favorites-container {
+  background-color: #f4f6f9;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Cabecera */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    font-size: 1.8rem;
+    color: #2b2b45;
+    margin: 0;
+    font-weight: 700;
+  }
+}
+
+.back-btn {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #666;
+  font-weight: 600;
+  transition: all 0.2s;
+
+  &:hover { background-color: #e2e6ea; }
+}
+
+/* --- BARRA DE HERRAMIENTAS --- */
+.toolbar-card {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin-bottom: 2rem;
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.search-wrapper {
+  position: relative;
+  flex-grow: 1;
+  max-width: 400px;
+
+  input {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 2.5rem; /* Espacio para el icono */
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #f9f9f9;
+    
+    &:focus {
+      outline: none;
+      border-color: #5b6cff;
+      background-color: white;
+    }
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.5;
+  }
+}
+
+.add-btn {
+  background-color: #5b6cff;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover { background-color: #4a5be0; }
+}
+
+/* --- ESTADO VACÍO --- */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 12px;
+  border: 2px dashed #e1e4e8;
+
+  .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+  h3 { color: #2b2b45; margin-bottom: 0.5rem; }
+  p { color: #8898aa; margin-bottom: 1.5rem; }
+  
+  .primary-btn {
+    background-color: #5b6cff;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+}
+
+/* --- GRILLA --- */
+.series-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.serie-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+
+  &:hover { transform: translateY(-5px); }
+}
+
+.poster-wrapper {
+  height: 320px; /* Altura fija para uniformidad */
+  width: 100%;
+  position: relative;
+  background-color: #eee;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Badge de Score */
+.score-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffc107; /* Amarillo estrella */
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  backdrop-filter: blur(4px);
+
+  &.has-score { border: 1px solid #ffc107; }
+  .no-rate { color: #ccc; font-weight: normal; font-size: 0.75rem; }
+}
+
+.card-content {
+  padding: 1.2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+
+  h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #2b2b45;
+  }
+}
+
+.meta-info {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 1.2rem;
+  
+  .dot { margin: 0 5px; opacity: 0.5; }
+}
+
+/* Botones de acción inferiores */
+.actions {
+  margin-top: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.rate-btn {
+  flex: 1;
+  background: #f0f2ff; /* Azul muy clarito */
+  color: #5b6cff;
+  border: 1px solid transparent;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #5b6cff;
+    color: white;
+  }
+}
+
+.delete-btn {
+  background: transparent;
+  color: #dc3545; /* Rojo */
+  border: 1px solid #dc3545;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #dc3545;
+    color: white;
+  }
+}
+
+.state-msg { text-align: center; color: #666; padding: 2rem; }

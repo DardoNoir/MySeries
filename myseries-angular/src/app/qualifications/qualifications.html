@@ -1,34 +1,51 @@
-<h2>⭐ Calificar Serie</h2>
+<div class="rating-wrapper">
+  <div class="qualification-card">
+    
+    <header>
+      <h2>⭐ Calificar Serie</h2>
+      <p></p>
+    </header>
 
-<div class="qualification-card">
-  <label>
-    Puntuación (1–10)
-    <input
-      type="number"
-      min="1"
-      max="10"
-      [(ngModel)]="score"
-    />
-  </label>
+    <div class="score-section">
+      <label>Tu Puntuación</label>
+      
+      <div class="stepper-wrapper">
 
-  <label>
-    Reseña
-    <textarea
-      rows="5"
-      [(ngModel)]="review"
-      placeholder="Escribí tu opinión..."
-    ></textarea>
-  </label>
+        <div class="display-box">
+          <input type="number" [(ngModel)]="score" readonly /> <span class="total">/ 10</span>
+        </div>
+        <button class="step-btn" (click)="decrease()" [disabled]="score <= 1">
+          −
+        </button>
 
-  <div class="actions">
-    <button (click)="submit()" [disabled]="loading">
-      💾 Guardar
-    </button>
+        <button class="step-btn" (click)="increase()" [disabled]="score >= 10">
+          +
+        </button>
+      </div>
+    </div>
 
-    <button (click)="cancel()">
-      ❌ Cancelar
-    </button>
+    <div class="review-section">
+      <label>Tu Reseña</label>
+      <textarea 
+        rows="5" 
+        [(ngModel)]="review" 
+        placeholder="¿Qué te pareció la trama? ¿Y los personajes? Escribe aquí..."
+      ></textarea>
+    </div>
+
+    <div *ngIf="loading" class="loading-msg">
+      <div class="spinner"></div> Guardando tu opinión...
+    </div>
+
+    <div class="actions">
+      <button class="btn-cancel" (click)="cancel()" [disabled]="loading">
+        Cancelar
+      </button>
+      
+      <button class="btn-save" (click)="submit()" [disabled]="loading">
+        Guardar
+      </button>
+    </div>
+
   </div>
-
-  <p *ngIf="loading">Guardando calificación...</p>
 </div>

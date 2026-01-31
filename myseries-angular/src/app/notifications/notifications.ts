@@ -32,17 +32,20 @@ export class NotificationsComponent implements OnInit {
   }
 
   loadNotifications() {
-    this.notifications.getUnread(this.userId)
-      .subscribe(data => this.unread = data);
+      this.notifications.getUnread(this.userId)
+        .subscribe(data => {
+          this.unread = data || []; 
+        });
 
-    this.notifications.getAll(this.userId)
-      .subscribe(data => this.all = data);
-  }
+      this.notifications.getAll(this.userId)
+        .subscribe(data => {
+          this.all = data || [];
+        });
+    }
 
   markRead(notificationId: number) {
     this.notifications.markAsRead(notificationId)
       .subscribe(() => {
-        // 🔄 refresca listas
         this.loadNotifications();
       });
   }

@@ -1,37 +1,59 @@
 <div class="series-container">
-  <h2>Búsqueda de Series</h2>
+  
+  <header class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      <span>←</span> Volver
+    </button>
+    <h2>Búsqueda de Series</h2>
+  </header>
 
-  <div class="search-box">
-    <label>Título</label>
-    <input [(ngModel)]="title" placeholder="Ej. Breaking Bad" />
+  <div class="search-card">
+    <div class="form-group">
+      <label>Título</label>
+      <input type="text" [(ngModel)]="title" placeholder="Ej. Breaking Bad" />
+    </div>
 
-    <label>Género (opcional)</label>
-    <select [(ngModel)]="genre">
-      <option value="">Todos</option>
-      <option *ngFor="let g of genres" [value]="g">
-        {{ g }}
-      </option>
-    </select>
+    <div class="form-group">
+      <label>Género</label>
+      <select [(ngModel)]="genre">
+        <option value="">Todos</option>
+        <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+      </select>
+    </div>
 
-    <button (click)="search()">Search</button>
-  </div>
-
-  <button (click)="goBack()">Volver al Menú</button>
-
-  <div *ngIf="loading">Buscando Series...</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-
-  <div class="series-grid">
-    <div class="serie-card" *ngFor="let serie of series">
-      <img *ngIf="serie.poster" [src]="serie.poster" />
-
-      <h3>{{ serie.title }}</h3>
-      <p>Año: {{ serie.year }}</p>
-      <p>Género: {{ serie.genre }}</p>
-
-      <button (click)="addToFavorites(serie)">
-        ⭐ Agregar a Favoritas
+    <div class="form-action">
+      <button class="primary-btn" (click)="search()">
+        Buscar
       </button>
     </div>
   </div>
-</div>
+
+  <div *ngIf="loading" class="state-message loading">
+    <div class="spinner"></div> Buscando series...
+  </div>
+  
+  <div *ngIf="error" class="state-message error">
+    ⚠️ {{ error }}
+  </div>
+
+  <div class="series-grid">
+    <div class="serie-card" *ngFor="let serie of series">
+      
+      <div class="poster-wrapper">
+        <img *ngIf="serie.poster && serie.poster !== 'N/A'" [src]="serie.poster" alt="{{serie.title}}" />
+        <div *ngIf="!serie.poster || serie.poster === 'N/A'" class="no-poster">
+          <span>🎬</span>
+        </div>
+      </div>
+
+      <div class="card-content">
+        <h3>{{ serie.title }}</h3>
+        <div class="meta-info">
+          <span class="year">{{ serie.year }}</span>
+          <span class="genre-tag" *ngIf="serie.genre">{{ serie.genre }}</span>
+        </div>
+
+        <button class="fav-btn" (click)="addToFavorites(serie)">
+          ⭐ Favoritos
+        </button>
+      </div>

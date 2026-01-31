@@ -1,23 +1,42 @@
-<div class="login-container">
-  <h2>Crear usuario</h2>
+<div class="main-wrapper">
+  <div class="signup-card">
+    
+    <h2>Crear cuenta nueva</h2>
+    <p class="subtitle">Ingresa tus datos para registrarte</p>
 
-  <input [value]="userName" disabled />
-  <input type="password" [value]="password" disabled />
+    <div class="input-group">
+      <input type="text" [(ngModel)]="userName" placeholder="Nombre de usuario" />
+      <input type="password" [(ngModel)]="password" placeholder="Contraseña" />
+      <input type="email" [(ngModel)]="email" placeholder="Correo electrónico" />
+    </div>
 
-  <input [(ngModel)]="email" placeholder="Email" />
+    <div class="preferences-group">
+      <span class="label-title">Notificaciones:</span>
+      
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="notificationsByEmail" />
+        <span>Por Email 📧</span>
+      </label>
 
-  <label>
-    <input type="checkbox" [(ngModel)]="notificationsByEmail" />
-    Notificaciones por Email
-  </label>
+      <label class="checkbox-label">
+        <input type="checkbox" [(ngModel)]="notificationsByApp" />
+        <span>Por App 📱</span>
+      </label>
+    </div>
 
-  <label>
-    <input type="checkbox" [(ngModel)]="notificationsByApp" />
-    Notificaciones por App
-  </label>
+    <div class="error-msg" *ngIf="error">
+      ⚠️ {{ error }}
+    </div>
 
-  <button (click)="crearUsuario()">Crear usuario</button>
-  <button (click)="goBack()">Volver</button>
+    <div class="actions">
+      <button class="primary-btn" (click)="crearUsuario()">
+        Crear usuario
+      </button>
+      
+      <button class="link-btn" (click)="goBack()">
+        Volver al inicio
+      </button>
+    </div>
 
-  <div class="error" *ngIf="error">{{ error }}</div>
+  </div>
 </div>

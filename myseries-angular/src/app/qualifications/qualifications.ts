@@ -32,6 +32,17 @@ export class QualificationComponent implements OnInit {
     this.userId = user.id;
   }
 
+  increase() {
+    if (this.score < 10) {
+      this.score++;
+    }
+  }
+
+  decrease() {
+    if (this.score > 1) {
+      this.score--;
+    }
+  }
   submit() {
     this.loading = true;
 

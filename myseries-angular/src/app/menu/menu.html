@@ -1,18 +1,39 @@
-<h2>Menú Principal</h2>
+<div class="main-wrapper">
+  <div class="menu-card">
+    
+    <h1>Menú Principal</h1>
 
-<button (click)="goToSearch()">Buscar Series</button>
-<button (click)="goToWatchlist()">Series Favoritas ⭐</button>
+    <div class="button-group">
+      <button class="menu-btn" (click)="goToSearch()">
+        <span class="icon">🔍</span> 
+        <span>Buscar Series</span>
+      </button>
 
-<button *ngIf="isAdmin()" (click)="goToMonitoring()">
-    📊 Monitoreo
-</button>
+      <button class="menu-btn" (click)="goToWatchlist()">
+        <span class="icon">⭐</span> 
+        <span>Series Favoritas</span>
+      </button>
 
-<button (click)="goToNotifications()">
-  🔔
-  <span *ngIf="unreadCount > 0" class="badge">
-    {{ unreadCount }}
-  </span>
-</button>
+      <button *ngIf="isAdmin()" class="menu-btn admin" (click)="goToMonitoring()">
+        <span class="icon">📊</span> 
+        <span>Monitoreo</span>
+      </button>
 
+      <button class="menu-btn" (click)="goToNotifications()">
+        <div class="btn-content">
+          <span class="icon">🔔</span> 
+          <span>Notificaciones</span>
+        </div>
+        
+        <span *ngIf="unreadCount > 0" class="badge">
+          {{ unreadCount }}
+        </span>
+      </button>
+    </div>
 
-<button (click)="logout()">Cerrar sesión</button>
+    <div class="footer-actions">
+      <button class="link" (click)="logout()">Cerrar sesión</button>
+    </div>
+
+  </div>
+</div>
