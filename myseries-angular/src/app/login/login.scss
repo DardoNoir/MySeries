@@ -1,0 +1,113 @@
+/* 🔥 Hace que el login ignore el layout general */
+:host {
+  display: block;
+  height: 100vh;
+  width: 100vw;
+  margin: -2rem; // anula el padding del app-content
+}
+
+/* Fondo fullscreen */
+.login-wrapper {
+  height: 100vh;
+  width: 100vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg, #1e1e2f, #2b2b45);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Card */
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 2.5rem 3rem;
+
+  background-color: #ffffff;
+  border-radius: 14px;
+
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  text-align: center;
+}
+
+/* Título */
+.login-card h1 {
+  margin-bottom: 2rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2b2b45;
+}
+
+/* Inputs */
+.login-card input {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  margin-bottom: 1rem;
+
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.login-card input:focus {
+  outline: none;
+  border-color: #5b6cff;
+  box-shadow: 0 0 0 2px rgba(91, 108, 255, 0.25);
+}
+
+/* Botón principal */
+button.primary {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.8rem;
+
+  background-color: #5b6cff;
+  color: #ffffff;
+
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+button.primary:hover {
+  background-color: #4a5be0;
+}
+
+button.primary:active {
+  transform: scale(0.97);
+}
+
+/* Botón link */
+button.link {
+  margin-top: 0.8rem;
+  background: transparent;
+  border: none;
+
+  color: #5b6cff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+button.link:hover {
+  text-decoration: underline;
+}
+
+/* Error */
+.error {
+  margin-top: 1.2rem;
+  padding: 0.6rem 0.8rem;
+
+  background-color: #ffe5e5;
+  color: #b00020;
+
+  border-radius: 8px;
+  font-size: 0.85rem;
+}

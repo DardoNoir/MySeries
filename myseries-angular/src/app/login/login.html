@@ -1,15 +1,34 @@
-<div class="login-container">
-  <h1>My Series</h1>
+<div class="login-wrapper">
+  <div class="login-card">
+    <h1>My Series</h1>
 
-  <input [(ngModel)]="userName" placeholder="Usuario" />
-  <input [(ngModel)]="password" type="password" placeholder="Contraseña" />
+    <input
+      [(ngModel)]="userName"
+      placeholder="Usuario"
+      autocomplete="username"
+    />
 
-  <button (click)="login()">Ingresar</button>
+    <input
+      [(ngModel)]="password"
+      type="password"
+      placeholder="Contraseña"
+      autocomplete="current-password"
+    />
 
-  <button *ngIf="creatingUser" (click)="goToCreateUser()">
-    Crear usuario
-  </button>
+    <button class="primary" (click)="login()">
+      Ingresar
+    </button>
 
+    <button
+      class="link"
+      *ngIf="creatingUser"
+      (click)="goToCreateUser()"
+    >
+      Crear usuario
+    </button>
 
-  <div class="error" *ngIf="error">{{ error }}</div>
+    <div class="error" *ngIf="error">
+      {{ error }}
+    </div>
+  </div>
 </div>
