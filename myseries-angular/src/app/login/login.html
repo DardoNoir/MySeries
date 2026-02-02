@@ -23,13 +23,7 @@
       Crear usuario
     </button>
 
-    <button
-      class="link"
-      *ngIf="creatingUser"
-      (click)="goToCreateUser()"
-    >
-      Crear usuario
-    </button>
+  
 
     <div class="error" *ngIf="error">
       {{ error }}
