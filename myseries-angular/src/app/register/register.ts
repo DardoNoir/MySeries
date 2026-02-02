@@ -28,7 +28,7 @@ userName = '';
     this.userName = data.userName;
     this.password = data.password;
   }
-
+  // Creación del Usuario
   crearUsuario() {
     this.auth.createUser({
       userName: this.userName,
@@ -47,6 +47,7 @@ userName = '';
     });
   }
 
+  // Volver a pantalla de Inicio
   goBack() {
     this.router.navigateByUrl('/login');
   }

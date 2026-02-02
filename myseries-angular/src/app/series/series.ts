@@ -17,14 +17,13 @@ import { Router } from '@angular/router';
 
 export class SeriesComponent {
   title = '';
-  genre = ''; // valor seleccionado
+  genre = '';
   loading = false;
   series: SerieDto[] = [];
   error?: string;
 
-  // ✅ Lista de géneros para el combo
+  // Lista de géneros para el combo
   genres: string[] = [
-   // '',
     'Action',
     'Comedy',
     'Drama',
@@ -49,6 +48,7 @@ export class SeriesComponent {
     private router: Router
   ) {}
 
+  // Búsqueda de Series
   search(): void {
     if (!this.title.trim()) {
       this.error = 'Enter a title';
@@ -71,6 +71,7 @@ export class SeriesComponent {
     });
   }
 
+  // Agregar a Watchlist
   addToFavorites(serie: SerieDto) {
     const user = JSON.parse(localStorage.getItem('user')!);
     this.watchlistService.addSeries(serie.imdbId!, user.id).subscribe(() => {
@@ -78,6 +79,7 @@ export class SeriesComponent {
     });
   }
 
+  // Volver al Menú
   goBack(): void {
     this.router.navigateByUrl('/menu');
   }

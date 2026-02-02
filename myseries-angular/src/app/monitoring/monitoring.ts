@@ -16,11 +16,13 @@ export class MonitoringComponent implements OnInit {
 
   constructor(private monitoringService: MonitoringService, private router: Router) {}
 
+  // Obtener estadísticas
   ngOnInit(): void {
     this.monitoringService.getStats()
       .subscribe(data => this.stats = data);
   }
 
+  // Volver al menú
   goBack(): void {
     this.router.navigateByUrl('/menu');
   }

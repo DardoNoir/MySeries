@@ -26,6 +26,7 @@ export class QualificationComponent implements OnInit {
     private http: HttpClient
   ) {}
 
+  // Obtener datos del Usuario y la Serie
   ngOnInit(): void {
     this.serieId = Number(this.route.snapshot.paramMap.get('id'));
     const user = JSON.parse(localStorage.getItem('user')!);
@@ -43,6 +44,8 @@ export class QualificationComponent implements OnInit {
       this.score--;
     }
   }
+
+ // Calificar Series
   submit() {
     this.loading = true;
 
@@ -63,6 +66,7 @@ export class QualificationComponent implements OnInit {
       });
   }
 
+  // Cancelar la puntuación
   cancel() {
     this.router.navigateByUrl('/watchlist');
   }

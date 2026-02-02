@@ -11,9 +11,6 @@ using Volo.Abp.DependencyInjection;
 
 namespace MySeries.Series
 {
-    // Servicio que se encarga de consumir la API externa OMDb
-    // Implementa ISeriesApiService para desacoplar la lógica del proveedor
-    // ITransientDependency indica que se crea una nueva instancia por inyección
     public class OmdbService : ISeriesApiService, ITransientDependency
     {
         // API Key de OMDb
@@ -21,12 +18,12 @@ namespace MySeries.Series
         // URL base de la API de OMDb
         private static readonly string baseUrl = "http://www.omdbapi.com/";
 
-        // Obtiene una colección de series filtradas por título
+        // Búsqueda de series por título y género
         public async Task<ICollection<SerieDto>> GetSeriesAsync(string title, string? genre)
         {
             using var client = new HttpClient();
 
-            // 1️⃣ Búsqueda por título
+            // Primero se realiza la búsqueda por Título para obtener el ImdbId
             var searchUrl = $"{baseUrl}?s={title}&type=series&apikey={apiKey}";
             var searchResponse = await client.GetAsync(searchUrl);
             searchResponse.EnsureSuccessStatusCode();
@@ -36,10 +33,9 @@ namespace MySeries.Series
 
             var result = new List<SerieDto>();
 
-            // Normalizamos el género buscado (si existe)
             var genreFilter = genre?.Trim().ToLowerInvariant();
 
-            // 2️⃣ Para cada serie encontrada → pedir detalle
+            // Obtención del resto de datos de la Serie, mediante ImdbId
             foreach (var item in searchResult?.Search ?? [])
             {
                 if (string.IsNullOrWhiteSpace(item.ImdbId))
@@ -54,16 +50,17 @@ namespace MySeries.Series
                 var detailJson = await detailResponse.Content.ReadAsStringAsync();
                 var detail = JsonConvert.DeserializeObject<OmdbDetailResponse>(detailJson);
 
-                // 3️⃣ Filtro por género (si fue solicitado)
+                // Filtro por género 
                 if (!string.IsNullOrEmpty(genreFilter))
                 {
                     if (string.IsNullOrWhiteSpace(detail?.Genre) ||
                     !(detail.Genre).ToLowerInvariant().Contains(genreFilter))
                     {
-                        continue; // ❌ no coincide → no se agrega
+                        continue; 
                     }
                 }
 
+                // Agregar los datos a SerieDto
                 result.Add(new SerieDto
                 {
                     Title = item.Title,
@@ -86,6 +83,7 @@ namespace MySeries.Series
         }
 
 
+        // Búsqueda de Series por ImdbId, usado para agregar Series a la Watchlist
         public async Task<SerieDto?> GetSerieByImdbIdAsync(string imdbId)
         {
             using var client = new HttpClient();

@@ -11,16 +11,12 @@ using Volo.Abp.Domain.Repositories;
 
 namespace MySeries.Series
 {
-    // Servicio de aplicación para gestionar entidades Serie
-    // Hereda de CrudAppService para obtener operaciones CRUD estándar
     public class SerieAppService
         : CrudAppService<Serie, SerieDto, int, PagedAndSortedResultRequestDto>,
           ISeriesAppService
     {
-        // Servicio externo para consultar series por API
         private readonly ISeriesApiService _seriesApiService;
 
-        // Constructor con inyección del repositorio y el servicio de API
         public SerieAppService(
             IRepository<Serie, int> repository,
             ISeriesApiService seriesApiService
@@ -29,19 +25,21 @@ namespace MySeries.Series
             _seriesApiService = seriesApiService;
         }
 
-        // Busca series por título utilizando el servicio externo
+        /*
+        Se deshabilitó el servicio, ya que se creó un Controlador
+        que luego será usado en el Frontend
+        */
         [RemoteService(IsEnabled = false)]
+        // Búsqueda de Series por Título, con opción de filtrar por Género
         public async Task<ICollection<SerieDto>> SearchByTitleAsync(string title, string? genre)
         {
-            // Delegar la búsqueda al servicio de integración
             return await _seriesApiService.GetSeriesAsync(title, genre);
         }
 
 
-        // Guarda una serie
+        // Guardar una serie en la DB
         public async Task<SerieDto> SaveAsync(SerieDto input)
         {
-            // Evitar duplicados por IMDbId
             var existing = await Repository.FirstOrDefaultAsync(
                 x => x.ImdbId == input.ImdbId);
             
@@ -73,17 +71,20 @@ namespace MySeries.Series
             return ObjectMapper.Map<Serie, SerieDto>(serie);
         }
 
-
+        // Obtener series de la DB o API --> Usado en las Watchlists
         public async Task<SerieDto> GetOrCreateFromApiAsync(string imdbId)
         {
+            // Si la Serie se encuentra en la DB
             var existing = await Repository.FirstOrDefaultAsync(s => s.ImdbId == imdbId);
             if (existing != null)
                 return ObjectMapper.Map<Serie, SerieDto>(existing);
 
+            // Si la Serie NO se encuentra en la DB
             var serieFromApi = await _seriesApiService.GetSerieByImdbIdAsync(imdbId);
             if (serieFromApi == null)
             throw new BusinessException("SerieNotFoundInApi");
 
+            // Guardar en la DB la Serie buscada en la API
             var entity = ObjectMapper.Map<SerieDto, Serie>(serieFromApi);
             await Repository.InsertAsync(entity, autoSave: true);
             return ObjectMapper.Map<Serie, SerieDto>(entity);

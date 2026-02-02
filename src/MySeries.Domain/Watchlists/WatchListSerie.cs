@@ -3,12 +3,12 @@ using Volo.Abp.Domain.Entities;
 
 namespace MySeries.Watchlists
 {
+    // Entidad que representa la relación entre las Series y las Watchlists
     public class WatchListSerie : Entity
     {
         public int WatchListId { get; set; }
         public int SerieId { get; set; }
 
-        // Navegación
         public WatchList WatchList { get; set; } = null!;
         public Serie Serie { get; set; } = null!;
 

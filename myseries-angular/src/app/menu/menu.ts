@@ -18,22 +18,27 @@ export class MenuComponent {
     private notifications: NotificationService,
   ) {}
 
+  // Ir a la Búsqueda 
   goToSearch() {
     this.router.navigateByUrl('/series');
   }
 
+  // Ir a la Lista de Seguimiento
   goToWatchlist() {
   this.router.navigateByUrl('/watchlist');
   }
 
+  // Comprobación de Administrador
   isAdmin(): boolean {
     return this.auth.isAdmin();
   }
 
+  // Ir a las estadísticas del Monitoreo
   goToMonitoring() {
     this.router.navigateByUrl('/monitoring');
   }
 
+  // Mostrar cantidad de Notificaciones sin leer desde el menú
   unreadCount = 0;
   ngOnInit() {
     const user = this.auth.getUser();
@@ -41,11 +46,12 @@ export class MenuComponent {
       .subscribe(c => this.unreadCount = c);
   }
 
+  // Ir a las notificaciones
   goToNotifications() {
     this.router.navigateByUrl('/notifications');
   }
 
-
+  // Cerrar sesión
   logout() {
     this.auth.logout();
     this.router.navigateByUrl('/login');

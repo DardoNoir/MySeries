@@ -10,12 +10,12 @@ namespace MySeries.Notifications
         public DateTime CreatedAt { get; private set; }
         public bool IsRead { get; private set; }
 
-        // 🔹 Constructor requerido por EF Core
+        // Constructor para EF Core
         protected Notification()
         {
         }
 
-        // 🔹 Constructor de dominio
+        // Constructor de dominio
         public Notification(int userId, string message)
         {
             UserId = userId;

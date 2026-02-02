@@ -11,6 +11,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Volo.Abp.AspNetCore.Mvc;
 
+/*
+    Fueron creados para poder implementar los métodos del backend
+    dentro del Frontend desarrolado con Angular
+    Se cambiaron los métodos POST, por GET
+*/
 namespace MySeries.Controllers
 {
     [Route("api/app/serie")]

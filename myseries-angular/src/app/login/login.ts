@@ -22,9 +22,9 @@ export class LoginComponent {
     private router: Router
   ) {}
 
+  // Login del Usuario
   login() {
     this.error = undefined;
-
     this.auth.login(this.userName, this.password).subscribe({
       next: () => this.router.navigateByUrl('/menu'),
       error: () => {
@@ -34,6 +34,7 @@ export class LoginComponent {
     });
   }
 
+  // Ir a la creación del Usuario
   goToCreateUser() {
     this.router.navigateByUrl('/register', {
       state: {

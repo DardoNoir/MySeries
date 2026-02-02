@@ -36,27 +36,28 @@ namespace MySeries.Qualifications
             _userRepository = userRepositry;
         }
 
-        // Calificar una serie
-
+        /*
+        Se deshabilitó el servicio, ya que se creó un Controlador
+        que luego será usado en el Frontend
+        */
         [RemoteService(IsEnabled = false)]
+        // Calificar O modificar la calificación de una serie 
         public async Task QualificationsSeriesAsync(int userId, int serieId, int Score, string? Review)
         {
-            // Verificar que esté autenticado
             if (userId <= 0)
                 throw new BusinessException("Usuario no autenticado.");
             
             var user = await _userRepository.GetAsync(userId);
 
-            // Validar que la puntuación esté entre 1 y 10
             if (Score < 1 || Score > 10)
                 throw new BusinessException("La puntuación debe estar entre 1 y 10.");
 
-            // Verificar que la serie exista
+
             var serie = await _seriesRepository.FirstOrDefaultAsync(s => s.Id == serieId);
             if (serie == null)
                 throw new BusinessException("La serie no existe.");
 
-            // Verificar que la serie esté en la lista de seguimiento del usuario
+
             var watchlist = await (await _watchlistsRepository
                 .WithDetailsAsync(w => w.WatchListSeries))
                 .FirstOrDefaultAsync(w =>
@@ -66,12 +67,10 @@ namespace MySeries.Qualifications
             if (watchlist == null)
                 throw new BusinessException("La serie no está en la lista de seguimiento del usuario.");
 
-            // Verificar si el usuario ya ha calificado la serie
             var qualificated = await _qualificationsRepository.
                 FirstOrDefaultAsync(q => q.UserId == userId
                 && q.SerieId == serieId);
 
-            // Si ya la ha calificado, actualizar la calificación y reseña
             if (qualificated != null)
             {
                 qualificated.Score = Score;
@@ -95,7 +94,6 @@ namespace MySeries.Qualifications
                 }
 
             }
-            // Si no la ha calificado, crear una nueva calificación
             else
             {
                 var qualification = new Qualification(userId, serieId, Score, Review);

@@ -19,18 +19,20 @@ namespace MySeries.Application.Usuarios
             _notificationService = notificationsAppService;
         }
 
-        // 1️⃣ Crear y guardar usuario
+        /*
+        Se deshabilitó el servicio, ya que se creó un Controlador
+        que luego será usado en el Frontend
+        */
         [RemoteService(IsEnabled = false)]
+        // Crear y guardar usuario
         public async Task<UsuarioDto> CrearUsuarioAsync(CreateUsuarioDto input)
         {
-            // Validaciones básicas
             if (string.IsNullOrWhiteSpace(input.UserName))
                 throw new Exception("El nombre de usuario es obligatorio");
 
             if (string.IsNullOrWhiteSpace(input.Password))
                 throw new Exception("La contraseña es obligatoria");
 
-            // Verificar si ya existe el username
             var existingUser = await _userRepository.FirstOrDefaultAsync(
                 u => u.UserName == input.UserName
             );
@@ -38,7 +40,6 @@ namespace MySeries.Application.Usuarios
             if (existingUser != null)
                 throw new Exception("El nombre de usuario ya existe");
 
-            // Crear entidad
             var user = new Usuario
             {
                 UserName = input.UserName,
@@ -46,13 +47,11 @@ namespace MySeries.Application.Usuarios
                 Password = input.Password,
                 NotificationsByEmail = input.NotificationsByEmail,
                 NotificationsByApp = input.NotificationsByApp,
-                Rol = RolUsuario.User 
+                Rol = RolUsuario.User // Se lo crea siempre como Usuario, para tener Rol Admin --> cambiar en la DB
             };
 
-            // Guardar
             await _userRepository.InsertAsync(user, autoSave: true);
 
-            // 🎉 Notificación bienvenida APP
             if (user.NotificationsByApp)
             {
                 await _notificationService.SendNotificationAsync(
@@ -61,7 +60,6 @@ namespace MySeries.Application.Usuarios
                 );
             }
 
-            // ✉️ Notificación bienvenida EMAIL
             if (user.NotificationsByEmail)
             {
                 await _notificationService.NotifyByEmailAsync(
@@ -70,8 +68,6 @@ namespace MySeries.Application.Usuarios
                 );
             }
 
-
-            // Mapear a DTO
             return new UsuarioDto
             {
                 Id = user.Id,
@@ -82,7 +78,7 @@ namespace MySeries.Application.Usuarios
             };
         }
 
-        // 2️⃣ Traer usuario para login
+        // Traer usuario 
         public async Task<UsuarioDto> GetUsuarioAsync(string userName, string password)
         {
             if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))

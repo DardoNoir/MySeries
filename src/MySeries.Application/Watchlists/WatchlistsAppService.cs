@@ -42,75 +42,70 @@ namespace MySeries.Watchlists
             _userRepository = userRepositry;
         }
 
-        // Agregar una serie (desde la API) a la watchlist del usuario
+        /*
+        Se deshabilitó el servicio, ya que se creó un Controlador
+        que luego será usado en el Frontend
+        */
         [RemoteService(IsEnabled = false)]
+        // Añadir Series a la Watchlist
         public async Task AddSeriesFromApiAsync(string imdbId, int userId)
         {
-            // 1️⃣ Verificar que el usuario esté autenticado
             if (userId <= 0)
                 throw new BusinessException("UsuarioNoAutenticado");
 
-            // 2️⃣ Obtener o crear la serie desde la API OMDb
             var serieDto = await _serieAppService.GetOrCreateFromApiAsync(imdbId);
 
-            // 3️⃣ Obtener la entidad Serie persistida
-            var serieEntity = await _serieRepository.GetAsync(s => s.ImdbId == imdbId);
+            var serieEntity = await _serieRepository.GetAsync(serieDto.Id);
             var user = await _userRepository.GetAsync(userId);
 
-            // 4️⃣ Obtener la watchlist del usuario incluyendo sus series
             var watchlist = await (await _watchlistRepository
                 .WithDetailsAsync(w => w.WatchListSeries))
                 .FirstOrDefaultAsync(w => w.UserId == userId);
 
-            // 5️⃣ Si el usuario no tiene watchlist, crearla
             if (watchlist == null)
             {
                 watchlist = new WatchList(userId);
                 await _watchlistRepository.InsertAsync(watchlist, autoSave: true);
             }
 
-            // 6️⃣ Verificar si la serie ya está asociada a la watchlist
             var alreadyAdded = await _watchListSerieRepository.AnyAsync(
                 x => x.WatchListId == watchlist.Id && x.SerieId == serieEntity.Id);
 
             if (alreadyAdded)
-                return; // La serie ya está en la watchlist → no hacer nada
+                return;
 
-            // 7️⃣ Crear la relación WatchList ↔ Serie (tabla intermedia)
-            var relation = new WatchListSerie(
-                watchlist.Id,
-                serieEntity.Id
+            await _watchListSerieRepository.InsertAsync(
+                new WatchListSerie(watchlist.Id, serieEntity.Id)
             );
 
-            await _watchListSerieRepository.InsertAsync(relation);
-
-             if (user.NotificationsByApp)
+            if (user.NotificationsByApp)
             {
                 await _notificationsAppService.SendNotificationAsync(
                     userId,
-                    $"⭐ Agregaste \"{serieEntity.Title}\" a tu lista de seguimiento"
+                     $"⭐ Agregaste \"{serieDto.Title}\" a tu lista de seguimiento"
                 );
             }
 
             if (user.NotificationsByEmail)
             {
                 await _notificationsAppService.NotifyByEmailAsync(
-                    userId,
-                    $"⭐ Agregaste \"{serieEntity.Title}\" a tu lista de seguimiento"
-                );
-            }
+                userId,
+                $"⭐ Agregaste \"{serieDto.Title}\" a tu lista de seguimiento"
+            );
         }
-
-        // Eliminar una serie de la watchlist del usuario
+    }
+        /*
+        Se deshabilitó el servicio, ya que se creó un Controlador
+        que luego será usado en el Frontend
+        */
         [RemoteService(IsEnabled = false)]
+        // Eliminar una Serie de la Watchlist del Usuario
         public async Task RemoveSeriesAsync(int seriesId, int userId)
         {
-            // 1️⃣ Verificar que el usuario esté autenticado
             if (userId <= 0)
                 throw new BusinessException("UsuarioNoAutenticado");
             
 
-            // 2️⃣ Obtener la watchlist del usuario
             var watchlist = await _watchlistRepository
                 .FirstOrDefaultAsync(w => w.UserId == userId);
 
@@ -120,14 +115,12 @@ namespace MySeries.Watchlists
             var serie = await _serieRepository.GetAsync(seriesId);
             var user = await _userRepository.GetAsync(userId);
 
-            // 3️⃣ Buscar la relación WatchListSerie
             var relation = await _watchListSerieRepository.FirstOrDefaultAsync(
                 x => x.WatchListId == watchlist.Id && x.SerieId == seriesId);
 
             if (relation == null)
                 throw new BusinessException("SerieNoEncontradaEnLaWatchlist");
 
-            // 4️⃣ Eliminar la relación (NO la serie)
             await _watchListSerieRepository.DeleteAsync(relation);
 
             if (user.NotificationsByApp)
@@ -147,8 +140,7 @@ namespace MySeries.Watchlists
             }
         }
 
-        // Obtener la watchlist del usuario
-        //[RemoteService(IsEnabled = false)]
+        // Obtener la Watchlist del Usuario
         public async Task<ICollection<WatchlistSerieDto>> GetWatchlistAsync(int userId)
         {
             if (userId <= 0)

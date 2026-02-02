@@ -24,6 +24,7 @@ export class NotificationsComponent implements OnInit {
     private router: Router
   ) {}
 
+  
   ngOnInit(): void {
     const user = this.auth.getUser();
     this.userId = user.id;
@@ -31,6 +32,7 @@ export class NotificationsComponent implements OnInit {
     this.loadNotifications();
   }
 
+  // Cargar Notificaciones
   loadNotifications() {
       this.notifications.getUnread(this.userId)
         .subscribe(data => {
@@ -43,6 +45,7 @@ export class NotificationsComponent implements OnInit {
         });
     }
 
+  // Marcae como leídas
   markRead(notificationId: number) {
     this.notifications.markAsRead(notificationId)
       .subscribe(() => {
@@ -50,6 +53,7 @@ export class NotificationsComponent implements OnInit {
       });
   }
 
+  // Volver al menú
   goBack(): void {
     this.router.navigateByUrl('/menu');
   }

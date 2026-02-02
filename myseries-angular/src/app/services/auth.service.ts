@@ -9,7 +9,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔑 LOGIN (GET /usuario)
+  // LOGIN 
   login(userName: string, password: string): Observable<UsuarioDto> {
     const params = new HttpParams()
       .set('userName', userName)
@@ -23,7 +23,7 @@ export class AuthService {
     );
   }
 
-  // 👤 CREAR USUARIO (GET /crear-usuario)
+  // CREAR USUARIO 
  createUser(input: CreateUsuarioDto): Observable<UsuarioDto> {
   const params = new HttpParams()
     .set('userName', input.userName)

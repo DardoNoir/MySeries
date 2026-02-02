@@ -13,6 +13,7 @@ namespace MySeries.Series
         public List<OmdbSerieItems>? Search {get; set;}
     }
 
+    // Items que devuelve la búsqueda por Título
     public class OmdbSerieItems
     {
         public string? Title { get; set; }
@@ -22,6 +23,7 @@ namespace MySeries.Series
         public string? Type { get; set; }
     }
 
+    // Items extra que devuelve la búsqueda por ImdbId
     public class OmdbDetailResponse
     {
         public string? Title { get; set; }

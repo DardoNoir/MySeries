@@ -29,7 +29,7 @@ export class WatchlistComponent implements OnInit {
     this.userId = user.id;
     this.loadWatchlist();
   }
-
+  // Cargar la Watchlist
   loadWatchlist() {
     this.loading = true;
     this.watchlistService.getWatchlist(this.userId).subscribe({
@@ -47,6 +47,7 @@ export class WatchlistComponent implements OnInit {
     );
   }
 
+  // Eliminar Series
   removeSerie(serie: WatchlistSerieDto) {
     if (!serie.id) return;
 

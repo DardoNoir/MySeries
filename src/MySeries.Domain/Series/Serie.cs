@@ -18,6 +18,5 @@ public class Serie : AggregateRoot<int>
     public string? Director { get; set; }
     public string? Writer { get; set; }
 
-    // ✅ Relación many-to-many vía tabla intermedia
     public ICollection<WatchListSerie> WatchListSeries { get; set; } = new List<WatchListSerie>();
 }

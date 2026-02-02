@@ -6,15 +6,15 @@ namespace MySeries.Watchlists
     public class WatchList : Entity<int>
     {
         public int UserId { get;  set; }
-
-        // ✅ Relación many-to-many vía tabla intermedia
         public ICollection<WatchListSerie> WatchListSeries { get;  set; }
 
+        // Constructor para EF Core
         protected WatchList()
         {
             WatchListSeries = new List<WatchListSerie>();
         }
 
+        // Constructor de dominio
         public WatchList(int userId)
         {
             UserId = userId;
