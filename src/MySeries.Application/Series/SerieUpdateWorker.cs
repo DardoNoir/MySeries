@@ -18,6 +18,8 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
     private readonly ISeriesApiService _seriesApiService;
     private readonly IRepository<WatchListSerie> _watchListSerieRepository;
     private readonly NotificationsAppService _notificationsAppService;
+    private readonly ILogger<SerieUpdateWorker> _logger;
+    private readonly IRepository<WatchList,int> _watchListRepository;
 
     public SerieUpdateWorker(
         AbpAsyncTimer timer,
@@ -25,7 +27,10 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
         IRepository<Serie, int> serieRepository,
         ISeriesApiService seriesApiService,
         IRepository<WatchListSerie> watchListSerieRepository,
-        NotificationsAppService notificationsAppService
+        NotificationsAppService notificationsAppService,
+        ILogger<SerieUpdateWorker> logger,
+        IRepository<WatchList, int> watchListRepository
+
     ) : base(timer, serviceScopeFactory)
     {
         Timer.Period = 10 * 1000; // ⏱ cada 6 horas
@@ -33,12 +38,14 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
         _seriesApiService = seriesApiService;
         _watchListSerieRepository = watchListSerieRepository;
         _notificationsAppService = notificationsAppService;
+        _logger = logger;
+        _watchListRepository = watchListRepository;
     }
 
     protected override async Task DoWorkAsync(PeriodicBackgroundWorkerContext workerContext)
     {
         var series = await _serieRepository.GetListAsync();
-        Console.WriteLine($"Entro al worker");
+        Logger.LogInformation($"Entro al worker");
 
         foreach (var serie in series)
         {
@@ -61,9 +68,21 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
             await _serieRepository.UpdateAsync(serie, autoSave: true);
 
             // Usuarios que siguen la serie
-            var followers = await _watchListSerieRepository.GetListAsync(
+            var watchListsSerie = await _watchListSerieRepository.GetListAsync(
                 ws => ws.SerieId == serie.Id
             );
+
+            var watchlistIds = watchListsSerie.Select(ws => ws.WatchListId).ToList();
+
+            foreach (var id in watchlistIds)
+            {
+                var wls = await _watchListRepository.GetAsync(id);
+                await _notificationsAppService.SendNotificationAsync(
+                    wls.UserId,
+                    $"📺 Cambios en \"{serie.Title}\": {string.Join(", ", changes)}"
+                );
+            }
+            /*
 
             foreach (var follower in followers)
             {
@@ -73,6 +92,7 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
                 );
                 Console.WriteLine($"Se lanzó la notificación");
             }
+            */
         }
     }
 
