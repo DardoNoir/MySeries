@@ -12,6 +12,7 @@ using MySeries.Watchlists;
 using MySeries.Qualifications;
 using MySeries.Notifications;
 using MySeries.Application.Contracts;
+using Volo.Abp.BackgroundWorkers;
 
 namespace MySeries;
 
@@ -34,7 +35,13 @@ public class MySeriesApplicationModule : AbpModule
             options.AddMaps<MySeriesApplicationModule>();
         });
 
+        Configure<AbpBackgroundWorkerOptions>(options =>
+        {
+            options.IsEnabled = true;
+        });
+
         context.Services.AddTransient<ISeriesApiService, OmdbService>();
+
         //  context.Services.AddTransient<IWatchlistsAppService, WatchlistsAppService>();
         //  context.Services.AddTransient<IQualificationsAppService, QualificationsAppService>();
         //  context.Services.AddTransient<INotificationsAppService, NotificationsAppService>();
