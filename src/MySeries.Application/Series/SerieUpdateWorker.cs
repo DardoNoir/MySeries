@@ -63,7 +63,8 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
             // Actualizar serie
             serie.ImdbRating = apiSerie.ImdbRating;
             serie.TotalSeasons = apiSerie.TotalSeasons;
-            serie.Plot = apiSerie.Plot;
+            serie.Poster = apiSerie.Poster;
+            serie.Director = apiSerie.Director;
 
             await _serieRepository.UpdateAsync(serie, autoSave: true);
 
@@ -82,17 +83,6 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
                     $"📺 Cambios en \"{serie.Title}\": {string.Join(", ", changes)}"
                 );
             }
-            /*
-
-            foreach (var follower in followers)
-            {
-                await _notificationsAppService.SendNotificationAsync(
-                    follower.WatchList.UserId,
-                    $"📺 Cambios en \"{serie.Title}\": {string.Join(", ", changes)}"
-                );
-                Console.WriteLine($"Se lanzó la notificación");
-            }
-            */
         }
     }
 
@@ -101,13 +91,16 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
         var changes = new List<string>();
 
         if (serie.ImdbRating != apiSerie.ImdbRating)
-            changes.Add($"nuevo rating IMDb: {apiSerie.ImdbRating}");
+            changes.Add($"nueva valoración general de {apiSerie.Title}: {apiSerie.ImdbRating}/10");
 
         if (serie.TotalSeasons != apiSerie.TotalSeasons)
-            changes.Add($"nueva cantidad de temporadas: {apiSerie.TotalSeasons}");
+            changes.Add($"Nueva temporada de {apiSerie.Title}, ahora cuenta con: {apiSerie.TotalSeasons} temporadas");
 
-        if (serie.Plot != apiSerie.Plot)
-            changes.Add("actualización en la descripción");
+        if (serie.Poster != apiSerie.Poster)
+            changes.Add($"Nueva imagen en {apiSerie.Title}");
+
+        if (serie.Director != apiSerie.Director)
+            changes.Add($"Nuevo director en {apiSerie.Title}: {apiSerie.Director}");
 
         return changes;
     }
