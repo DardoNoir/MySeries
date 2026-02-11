@@ -1,17 +1,20 @@
-﻿using Volo.Abp.PermissionManagement;
-using Volo.Abp.SettingManagement;
-using Volo.Abp.Account;
-using Volo.Abp.Identity;
-using Volo.Abp.AutoMapper;
-using Volo.Abp.FeatureManagement;
-using Volo.Abp.Modularity;
-using Volo.Abp.TenantManagement;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MySeries.Application.Contracts;
+using MySeries.Notifications;
+using MySeries.Qualifications;
 using MySeries.Series;
 using MySeries.Watchlists;
-using MySeries.Qualifications;
-using MySeries.Notifications;
-using MySeries.Application.Contracts;
+using System.Threading.Tasks;
+using Volo.Abp;
+using Volo.Abp.Account;
+using Volo.Abp.AutoMapper;
+using Volo.Abp.BackgroundWorkers;
+using Volo.Abp.FeatureManagement;
+using Volo.Abp.Identity;
+using Volo.Abp.Modularity;
+using Volo.Abp.PermissionManagement;
+using Volo.Abp.SettingManagement;
+using Volo.Abp.TenantManagement;
 
 namespace MySeries;
 
@@ -24,7 +27,7 @@ namespace MySeries;
     typeof(AbpTenantManagementApplicationModule),
     typeof(AbpSettingManagementApplicationModule),
     typeof(AbpAutoMapperModule)
-    )]
+)]
 public class MySeriesApplicationModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
@@ -34,9 +37,23 @@ public class MySeriesApplicationModule : AbpModule
             options.AddMaps<MySeriesApplicationModule>();
         });
 
+        Configure<AbpBackgroundWorkerOptions>(options =>
+        {
+            options.IsEnabled = true;
+        });
+
         context.Services.AddTransient<ISeriesApiService, OmdbService>();
-        //  context.Services.AddTransient<IWatchlistsAppService, WatchlistsAppService>();
-        //  context.Services.AddTransient<IQualificationsAppService, QualificationsAppService>();
-        //  context.Services.AddTransient<INotificationsAppService, NotificationsAppService>();
+    }
+
+    public override async Task OnApplicationInitializationAsync(
+        ApplicationInitializationContext context)
+    {
+        var backgroundWorkerManager =
+            context.ServiceProvider.GetRequiredService<IBackgroundWorkerManager>();
+
+        var worker =
+            context.ServiceProvider.GetRequiredService<SerieUpdateWorker>();
+
+        await backgroundWorkerManager.AddAsync(worker);
     }
 }
