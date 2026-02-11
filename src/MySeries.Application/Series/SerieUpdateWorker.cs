@@ -34,7 +34,9 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
 
     ) : base(timer, serviceScopeFactory)
     {
-        Timer.Period = 10 * 1000; // ⏱ cada 6 horas
+        Timer.Period = 6 * 60 * 60 * 1000; // ⏱ cada 6 horas
+        // para pruebas, 30 segundos
+        // Timer.Period = 30 * 1000;
         _serieRepository = serieRepository;
         _seriesApiService = seriesApiService;
         _watchListSerieRepository = watchListSerieRepository;
