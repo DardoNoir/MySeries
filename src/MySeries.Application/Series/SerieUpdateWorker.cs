@@ -11,6 +11,7 @@ using MySeries.Series;
 using Microsoft.Extensions.DependencyInjection;
 using MySeries.SerieService;
 using System.Collections.Generic;
+using MySeries.Usuarios;
 
 public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
 {
@@ -18,8 +19,8 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
     private readonly ISeriesApiService _seriesApiService;
     private readonly IRepository<WatchListSerie> _watchListSerieRepository;
     private readonly NotificationsAppService _notificationsAppService;
-    private readonly ILogger<SerieUpdateWorker> _logger;
     private readonly IRepository<WatchList,int> _watchListRepository;
+    private readonly IRepository<Usuario, int> _userRepository;
 
     public SerieUpdateWorker(
         AbpAsyncTimer timer,
@@ -28,8 +29,8 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
         ISeriesApiService seriesApiService,
         IRepository<WatchListSerie> watchListSerieRepository,
         NotificationsAppService notificationsAppService,
-        ILogger<SerieUpdateWorker> logger,
-        IRepository<WatchList, int> watchListRepository
+        IRepository<WatchList, int> watchListRepository,
+        IRepository<Usuario, int> userRepository
 
     ) : base(timer, serviceScopeFactory)
     {
@@ -38,8 +39,8 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
         _seriesApiService = seriesApiService;
         _watchListSerieRepository = watchListSerieRepository;
         _notificationsAppService = notificationsAppService;
-        _logger = logger;
         _watchListRepository = watchListRepository;
+        _userRepository = userRepository;
     }
 
     protected override async Task DoWorkAsync(PeriodicBackgroundWorkerContext workerContext)
@@ -78,10 +79,23 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
             foreach (var id in watchlistIds)
             {
                 var wls = await _watchListRepository.GetAsync(id);
-                await _notificationsAppService.SendNotificationAsync(
-                    wls.UserId,
-                    $"📺 Cambios en \"{serie.Title}\": {string.Join(", ", changes)}"
-                );
+                if (wls == null)
+                    continue;
+
+                var user = await _userRepository.GetAsync(wls.Id);
+
+                if (user.NotificationsByApp)
+                {
+                    await _notificationsAppService.SendNotificationAsync(
+                    user.Id,
+                    $"📺 Cambios en \"{serie.Title}\": {string.Join(", ", changes)}");
+                }
+
+                if (user.NotificationsByEmail)
+                {
+                    await _notificationsAppService.NotifyByEmailAsync(user.Id,
+                        $"📺 Cambios en \"{serie.Title}\": {string.Join(", ", changes)}");
+                }
             }
         }
     }
