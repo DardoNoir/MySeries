@@ -97,11 +97,10 @@ public class MySeriesHttpApiHostModule : AbpModule
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
 
-        // 🔥 CONFIGURACIÓN DE AUDITING (AGREGADO)
         Configure<AbpAuditingOptions>(options =>
         {
             options.IsEnabled = true;
-            options.IsEnabledForGetRequests = true;       // 🔥 IMPORTANTE
+            options.IsEnabledForGetRequests = true;       
             options.IsEnabledForAnonymousUsers = true;
             options.ApplicationName = "MySeries";
         });
