@@ -34,7 +34,11 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
 
     ) : base(timer, serviceScopeFactory)
     {
-        Timer.Period = 10 * 1000; // ⏱ cada 6 horas
+        
+        //Timer.Period = 6 * 60 *60 *1000;
+        // Timer para pruebas
+         Timer.Period = 30 * 1000; 
+        
         _serieRepository = serieRepository;
         _seriesApiService = seriesApiService;
         _watchListSerieRepository = watchListSerieRepository;
@@ -78,11 +82,12 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
 
             foreach (var id in watchlistIds)
             {
+
                 var wls = await _watchListRepository.GetAsync(id);
                 if (wls == null)
                     continue;
 
-                var user = await _userRepository.GetAsync(wls.Id);
+                var user = await _userRepository.GetAsync(wls.UserId);
 
                 if (user.NotificationsByApp)
                 {
