@@ -21,9 +21,7 @@ namespace MySeries.Monitoring
         // Traer las estadísticas de la API
         public async Task<MonitoringDto> GetApiStatsAsync()
         {
-            var logs = await _auditLogRepository.GetListAsync(
-                startTime: DateTime.Now.AddDays(-7)   // de la última semana
-            );
+            var logs = await _auditLogRepository.GetListAsync();
 
             // 5 Endpoints más llamados
             var topEndpoints = logs

@@ -84,7 +84,7 @@ public class SerieUpdateWorker : AsyncPeriodicBackgroundWorkerBase
                 if (wls == null)
                     continue;
 
-                var user = await _userRepository.GetAsync(wls.Id);
+                var user = await _userRepository.GetAsync(wls.UserId);
 
                 if (user.NotificationsByApp)
                 {
