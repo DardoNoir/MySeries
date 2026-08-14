@@ -57,5 +57,4 @@ You can see the following resources to learn more about your solution and the AB
 * [Application Startup Template](https://abp.io/docs/latest/startup-templates/application/index)
 =======
 # MySeries
-Intento de subir MySeries, para ver si puedo hacerlo andar
 >>>>>>> 2c6587b37d06c5929c8be6a423731ce8e9be329e
